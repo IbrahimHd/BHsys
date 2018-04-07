@@ -145,7 +145,6 @@
     <Content Include="index _directive.html" />
     <Content Include="indexR.html" />
     <Content Include="item\_itemModal.html" />
-    <Content Include="loginDir\login__.html" />
     <Content Include="loginDir\loginCpt.js" />
     <Content Include="mapDir\geojson-lbn.min.js" />
     <Content Include="mapDir\mapSearch.html" />
@@ -192,12 +191,11 @@
     <Content Include="scripts\app\nbrToWordsFltr.js" />
     <Content Include="scripts\app\nbrToWordsFltr_En.js" />
     <Content Include="scripts\app\routing.js" />
-    <Content Include="scripts\app\security\auth.js" />
     <Content Include="scripts\app\security\authService.js" />
+    <Content Include="scripts\app\security\authNotifyService.js" />
     <Content Include="scripts\app\security\authInterceptor.js" />
     <Content Include="scripts\app\security\routerSecurity.js" />
     <Content Include="scripts\app\security\securityManager.js" />
-    <Content Include="scripts\app\security\session.js" />
     <Content Include="scripts\app\service-worker-register.js" />
     <Content Include="scripts\app\service-worker.js" />
     <Content Include="scripts\app\utilityService.js" />
@@ -380,7 +378,6 @@
     <Content Include="index.html" />
     <Content Include="loginDir\login.css" />
     <Content Include="loginDir\login.html" />
-    <Content Include="loginDir\loginCtrl.js" />
     <Content Include="item\itemsList.html" />
     <Content Include="receiptDir\receipt.css" />
     <Content Include="receiptDir\receipt.html" />
