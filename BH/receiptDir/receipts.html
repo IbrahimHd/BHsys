@@ -1,0 +1,195 @@
+﻿<style>
+    .tableWithScroll thead, .tableWithScroll tbody, .tableWithScroll tr {
+        display: block;
+        width: 100%;
+    }
+    .tableWithScroll tbody {
+        height: 365px;
+        overflow-y: overlay;
+    }
+    .tableWithScroll tbody td, .tableWithScroll tfoot td, .tableWithScroll thead th {
+        display: inline-block;
+    }
+    .tableWithScroll thead th {
+        height:80px
+    }
+    .tableWithScroll tbody td {
+        height:40px;
+    }    
+    .tableWithScroll tfoot td {
+        height:43px;
+        padding:2px !important;
+        border-color:transparent !important;
+        background-color:#eee;
+    }
+    .tableWithScroll tbody tr:hover td,.tableWithScroll tbody tr:focus td {
+        height:55px;
+    }  
+    .showOnHover {
+        display: none;
+    }
+    .tableWithScroll tbody tr:hover td .hideOnHover, .tableWithScroll tbody tr:focus td .hideOnHover {
+        display: none;
+    }
+    .tableWithScroll tbody tr:hover td .showOnHover, .tableWithScroll tbody tr:focus td .showOnHover {
+        display: block !important;
+        padding:initial 2px !important;
+    }
+</style>
+
+<div class="banner bg-white">
+    <span class="text-lg">لائحة الإستلام</span>
+    <a class="btn btn-primary btn-outline pull-left" ui-sref="layout.receipt({dataLoad:null, mode:'add'})"><i class="fa fa-plus"></i>&nbsp;إستلام جديد</a>
+</div>
+ 
+<!--ng-show="receipts.length>0"-->
+<div class="row removeNgtvMrgn padding-1">
+    <div class="panel panel-primary"  id="receiptsContainer">
+        <div class="panel-heading">
+            <div class="panel-title">
+            </div>
+            <div class="row">
+                <div class="col-sm-4">
+                    <i class="fa fa-th-large"></i>
+                </div>
+                <div class="col-sm-4">
+                    <div include-same-scope="common/datetimeRangePicker/datetimeRangePicker.html"></div>
+                </div>
+                <div class="col-sm-4">
+                    <i class="fa fa-plus"></i>
+                </div>
+            </div>
+        </div>
+
+        <!--<div class="panel-body scroll-custom" style="padding:0px;max-height:calc(100vh - (175px));overflow-y:scroll">-->
+        <div class="panel-body" style="padding:0px;max-height:calc(100vh - (172px));">
+            <!--{{gridDisplayItem}}
+            {{gridItem}}-->
+            <div class="alert alert-warning" ng-show="!isLoading && receipts.length < 1 && filterBy==null && filterByFieldsJSON =='{}'">
+                <h5>لم يتم العثور على إستلامات في التاريخ المحدد في الأعلى.</h5>
+                <button class="btn btn-primary btn-outline" ui-sref="layout.receipt({dataLoad: null, mode: 'add'})"><i class="fa fa-plus"></i>&nbsp;إستلام جديد</button>
+            </div>
+            <!--selection-mode="MultiRow"
+            selected-items="mySelectedItems"
+            filtered-items="[]"
+            filtered-items-page="[]"
+            debugMode="true"-->
+            <!--DON'T HIDE THE TABLE IF THERE IS A FILTER APPLIED ('true' means empty filter)-->
+            <table class="tableWithScroll"
+                    ng-show="receipts.length>0 || filterBy!=null || filterByFieldsJSON !='{}'"
+                    tr-ng-grid=""
+                    items="receipts"
+                    order-by="'receiptDate'"
+                    order-by-reverse="'true'"
+                    total-items="recordCount"
+                    page-items="12"
+                    on-data-required="trNgGridGetServerSideItems(currentPage, pageItems, filterBy, filterByFields, orderBy, orderByReverse)"
+                    selection-mode="None">
+                    <thead>
+                        <tr>
+                            <th field-name="receiptId" display-name="الإستلام" cell-width="10%"></th>
+                            <th field-name="receiptDate" display-name="التاريخ" cell-width="12%" display-format="date:'yyyy/MM/dd'"></th>
+                            <th field-name="supplierName" display-name="إسم المورّد" cell-width="35%"></th>
+                            <th field-name="itemsCount" display-name="الأصناف" cell-width="10%"></th>
+                            <th field-name="totalCost" display-name="المبلغ" cell-width="13%" display-format="number"></th>
+                            <th cell-width="20%">
+                                <span class="tr-ng-title">وسائل مساعدة</span>
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr class="animate">
+                            <td field-name="supplierName">
+                                <span class="bold">{{gridItem.supplierName}}</span>
+                                <div class="showOnHover small text-muted"><i class="fa fa-clock-o"></i>&nbsp;{{gridItem.createdAt}}</div>
+                            </td>
+                            <td field-name="totalCost">
+                                <span class="bold">{{gridDisplayItem.totalCost}}</span>
+                            </td>
+                            <td>
+                                <span class="hideOnHover">something <i class="fa fa-ellipsis-h"></i></span>
+                                <div class="showOnHover">
+                                    <a class="btn-circle"
+                                       ui-sref="modalView({ htmlUrl: 'receiptDir/receiptPrint.html', ctrlUrl: 'receiptDir/receiptPrintCtrl.js', ctrlName: 'receiptPrintCtrl', dataLoad: gridItem.receiptId , mode: 'read' })"
+                                       uib-tooltip="معاينة الإيصال"
+                                       tooltip-append-to-body="true"><i class="fa fa-list-alt"></i></a>
+                                    <a class="btn-circle"
+                                       ui-sref="layout.receipt({receiptId: gridItem.receiptId, mode: 'edit' })"
+                                       uib-tooltip="تعديل الإيصال"
+                                       tooltip-append-to-body="true"><i class="fa fa-pencil"></i></a>
+                                    <button class="btn-circle" ng-click="receipts.splice(receipts.indexOf(gridItem),1)">
+                                        <i class="fa fa-eye-slash"></i>
+                                    </button>
+                                    <button mwl-confirm
+                                            title="{{ msgConfirmRemove.title }}"
+                                            message="{{ msgConfirmRemove.message }}"
+                                            confirm-text="{{ msgConfirmRemove.confirmText }}"
+                                            cancel-text="{{ msgConfirmRemove.cancelText }}"
+                                            placement="{{ msgConfirmRemove.placement }}"
+                                            on-confirm="removeReceipt(gridItem)"
+                                            on-cancel="'noting to do, just keep in place'"
+                                            confirm-button-type="danger"
+                                            cancel-button-type="default"
+                                            uib-tooltip="حذف الإيصال"
+                                            tooltip-append-to-body="true"
+                                            class="btn-circle"
+                                            type="button">
+                                        <i class="fa fa-trash-o text-danger"></i>
+                                    </button>
+                                    <button class="btn-circle btn-danger"
+                                            ng-if="currentUser.UserRole=='manager' && companyInfo.gblShowPermanentDeleteAuthUsers"
+                                            uib-tooltip="حذف الصنف دون إمكانية إسترجاعه لاحقاً"
+                                            tooltip-append-to-body="true"
+                                            tooltip-placement="auto top"
+                                            mwl-confirm
+                                            title="{{ msgConfirmDelete.title }}"
+                                            message="{{ msgConfirmDelete.message }}"
+                                            confirm-text="{{ msgConfirmDelete.confirmText }}"
+                                            cancel-text="{{ msgConfirmDelete.cancelText }}"
+                                            placement="{{ msgConfirmDelete.placement }}"
+                                            on-confirm="deleteReceipt(gridItem)"
+                                            on-cancel="'noting to do, just keep in place'"
+                                            confirm-button-type="danger"
+                                            cancel-button-type="default"
+                                            type="button">
+                                        <i class="fa fa-trash-o"></i>
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                    <tfoot>
+                        <tr>
+                            <td colspan="4" width="50%">
+                                <span tr-ng-grid-global-filter=""></span>
+                                <span class="form-group pull-left">
+                                    <button class="btn btn-primary btn-outline"
+                                            ui-sref="layout.receipt({dataLoad: null, mode: 'add'})">
+                                        <i class="fa fa-plus"></i>&nbsp;إستلام جديد
+                                    </button>
+                                    <button class="btn-circle"
+                                            ng-if="currentUser.UserRole=='manager'"
+                                            ng-click="toggleBottomSlide(isBottomSlideOpen);loadReceiptsRemovedList()"
+                                            uib-tooltip="إسترجاع الإيصالات المحذوفة"
+                                            type="button">
+                                        <i class="fa fa-history"></i>
+                                    </button>
+                                </span>
+                            </td>
+                            <td colspan="2" width="20%">
+                                <spin-Kit ng-show="isLoading" class="centerXXX"></spin-Kit>
+                            </td>
+                            <td colspan="2" width="30%">
+                                <span tr-ng-grid-pager=""></span>
+                            </td>                        
+                        </tr>
+                    </tfoot>
+                </table>
+        </div>
+        <!--
+        <div class="panel-footer">
+        </div>-->
+    </div>
+    <!--<div id="receiptsContainer" style="position:absolute; z-index:999999; min-height:100%;height:100%; top:0; bottom:0; background-color:green;">receiptsContainer</div>-->
+    <div include-same-scope="receiptDir/receiptsRestoreContainer.html"></div>
+</div>

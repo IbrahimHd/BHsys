@@ -1,0 +1,921 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+    <Schema Namespace="BHModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="Company">
+          <Key>
+            <PropertyRef Name="companyName" />
+          </Key>
+          <Property Name="companyName" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="companyHeaderName" Type="nvarchar" MaxLength="50" />
+          <Property Name="receiptListDefaultDateRange" Type="nvarchar" MaxLength="50" />
+          <Property Name="receiptItemConfirmDeletion" Type="bit" />
+          <Property Name="gblShowPermanentDeleteAuthUsers" Type="bit" />
+          <Property Name="gblShowTimeOfDatetimeRange" Type="bit" />
+          <Property Name="companyAddress" Type="nvarchar" MaxLength="50" />
+          <Property Name="companyPhone" Type="nchar" MaxLength="13" />
+          <Property Name="companyPhone2" Type="nchar" MaxLength="13" />
+        </EntityType>
+        <EntityType Name="Item">
+          <Key>
+            <PropertyRef Name="itemId" />
+          </Key>
+          <Property Name="itemId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="itemName" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="itemCategory" Type="nvarchar" MaxLength="20" />
+          <Property Name="itemPackage" Type="nvarchar" MaxLength="20" Nullable="false" />
+          <Property Name="itemPackageDeposit" Type="float" />
+          <Property Name="itemFreight" Type="float" />
+          <Property Name="itemLandingCost" Type="float" />
+          <Property Name="createdAt" Type="datetime" Nullable="false" />
+          <Property Name="createdBy" Type="nvarchar" MaxLength="15" />
+          <Property Name="modifiedAt" Type="datetime" />
+          <Property Name="modifiedBy" Type="nvarchar" MaxLength="15" />
+          <Property Name="isDeleted" Type="bit" />
+        </EntityType>
+        <EntityType Name="PackageType">
+          <Key>
+            <PropertyRef Name="pkgType" />
+          </Key>
+          <Property Name="pkgType" Type="nvarchar" MaxLength="20" Nullable="false" />
+          <Property Name="isDeleted" Type="bit" />
+        </EntityType>
+        <EntityType Name="Receipt">
+          <Key>
+            <PropertyRef Name="receiptId" />
+          </Key>
+          <Property Name="receiptId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="supplierId" Type="int" Nullable="false" />
+          <Property Name="receiptDate" Type="datetime" />
+          <Property Name="freight" Type="float" />
+          <Property Name="landingCost" Type="float" />
+          <Property Name="createdAt" Type="datetime" />
+          <Property Name="createdBy" Type="nvarchar" MaxLength="15" />
+          <Property Name="modifiedAt" Type="datetime" />
+          <Property Name="modifiedBy" Type="nvarchar" MaxLength="15" />
+          <Property Name="isDeleted" Type="bit" />
+        </EntityType>
+        <EntityType Name="ReceiptItem">
+          <Key>
+            <PropertyRef Name="receiptId" />
+            <PropertyRef Name="itemId" />
+          </Key>
+          <Property Name="receiptId" Type="int" Nullable="false" />
+          <Property Name="itemId" Type="int" Nullable="false" />
+          <Property Name="itemPackage" Type="nvarchar" MaxLength="20" Nullable="false" />
+          <Property Name="itemPackageCount" Type="smallint" />
+          <Property Name="itemPackageDeposit" Type="float" />
+          <Property Name="itemFreight" Type="float" />
+          <Property Name="itemLandingCost" Type="float" />
+          <Property Name="itemQnty" Type="smallint" Nullable="false" />
+          <Property Name="itemCost" Type="float" Nullable="false" />
+          <Property Name="createdAt" Type="datetime" />
+          <Property Name="createdBy" Type="nvarchar" MaxLength="15" />
+          <Property Name="modifiedAt" Type="datetime" />
+          <Property Name="modifiedBy" Type="nvarchar" MaxLength="15" />
+          <Property Name="isDeleted" Type="bit" />
+        </EntityType>
+        <EntityType Name="Role">
+          <Key>
+            <PropertyRef Name="UserRole" />
+          </Key>
+          <Property Name="UserRole" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="Discription" Type="nvarchar" MaxLength="50" />
+        </EntityType>
+        <EntityType Name="Supplier">
+          <Key>
+            <PropertyRef Name="supplierId" />
+          </Key>
+          <Property Name="supplierId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="supplierName" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="supplierPhone" Type="varchar" MaxLength="12" />
+          <Property Name="supplierAddress" Type="nvarchar" MaxLength="50" />
+          <Property Name="supplierRemark" Type="nvarchar" MaxLength="50" />
+          <Property Name="createdAt" Type="datetime" Nullable="false" />
+          <Property Name="createdBy" Type="nvarchar" MaxLength="15" />
+          <Property Name="modifiedAt" Type="datetime" />
+          <Property Name="modifiedBy" Type="nvarchar" MaxLength="15" />
+          <Property Name="isDeleted" Type="bit" />
+        </EntityType>
+        <EntityType Name="UserAccount">
+          <Key>
+            <PropertyRef Name="UserLogin" />
+          </Key>
+          <Property Name="UserLogin" Type="varchar" MaxLength="15" Nullable="false" />
+          <Property Name="UserPassword" Type="varchar" MaxLength="15" />
+          <Property Name="UserName" Type="nvarchar" MaxLength="50" />
+          <Property Name="UserRole" Type="nvarchar" MaxLength="50" />
+          <Property Name="pref_autorefreshEnabled" Type="bit" />
+          <Property Name="pref_autorefreshInterval" Type="int" />
+          <Property Name="IsLoggedIn" Type="bit" />
+          <Property Name="LoggedInAt" Type="datetime" />
+          <Property Name="LoggedOutAt" Type="datetime" />
+        </EntityType>
+        <!--Errors Found During Generation:
+warning 6002: The table/view 'BH.dbo.vReceiptItem' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+        <EntityType Name="vReceiptItem">
+          <Key>
+            <PropertyRef Name="receiptId" />
+            <PropertyRef Name="itemId" />
+            
+            
+            
+            
+          </Key>
+          <Property Name="receiptId" Type="int" Nullable="false" />
+          <Property Name="itemId" Type="int" Nullable="false" />
+          <Property Name="itemPackage" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="itemQnty" Type="smallint" Nullable="false" />
+          <Property Name="itemCost" Type="float" Nullable="false" />
+          <Property Name="createdAt" Type="datetime" />
+          <Property Name="createdBy" Type="nvarchar" MaxLength="15" />
+          <Property Name="modifiedAt" Type="datetime" />
+          <Property Name="modifiedBy" Type="nvarchar" MaxLength="15" />
+          <Property Name="itemName" Type="nvarchar" MaxLength="50" Nullable="false" />
+        </EntityType>
+        <!--Errors Found During Generation:
+warning 6002: The table/view 'BH.dbo.vReceiptItemsSummary' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+        <EntityType Name="vReceiptItemsSummary">
+          <Key>
+            <PropertyRef Name="receiptId" />
+          </Key>
+          <Property Name="receiptId" Type="int" Nullable="false" />
+          <Property Name="itemsCount" Type="int" />
+          <Property Name="totalCost" Type="float" />
+        </EntityType>
+        <!--Errors Found During Generation:
+warning 6002: The table/view 'BH.dbo.vReceiptSummary' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+        <EntityType Name="vReceiptSummary">
+          <Key>
+            <PropertyRef Name="receiptId" />
+            
+          </Key>
+          <Property Name="receiptId" Type="int" Nullable="false" />
+          <Property Name="supplierId" Type="int" Nullable="false" />
+          <Property Name="supplierName" Type="nvarchar" MaxLength="50" />
+          <Property Name="receiptDate" Type="datetime" />
+          <Property Name="createdAt" Type="datetime" />
+          <Property Name="createdBy" Type="nvarchar" MaxLength="15" />
+          <Property Name="modifiedAt" Type="datetime" />
+          <Property Name="modifiedBy" Type="nvarchar" MaxLength="15" />
+          <Property Name="itemsCount" Type="int" />
+          <Property Name="totalCost" Type="float" />
+        </EntityType>
+        <!--Errors Found During Generation:
+warning 6002: The table/view 'BH.dbo.vSupplierItem' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+        <EntityType Name="vSupplierItem">
+          <Key>
+            
+            <PropertyRef Name="itemId" />
+            
+            
+            
+          </Key>
+          <Property Name="supplierId" Type="int" Nullable="false" />
+          <Property Name="itemId" Type="int" Nullable="false" />
+          <Property Name="itemName" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="itemCategory" Type="nvarchar" MaxLength="20" />
+          <Property Name="itemPackage" Type="nvarchar" MaxLength="20" Nullable="false" />
+          <Property Name="itemPackageDeposit" Type="float" />
+          <Property Name="itemFreight" Type="float" />
+          <Property Name="itemLandingCost" Type="float" />
+          <Property Name="createdAt" Type="datetime" Nullable="false" />
+          <Property Name="createdBy" Type="nvarchar" MaxLength="15" />
+          <Property Name="modifiedAt" Type="datetime" />
+          <Property Name="modifiedBy" Type="nvarchar" MaxLength="15" />
+          <Property Name="isDeleted" Type="bit" />
+        </EntityType>
+        <!--Errors Found During Generation:
+warning 6002: The table/view 'BH.dbo.vSupplierSummary' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+        <EntityType Name="vSupplierSummary">
+          <Key>
+            <PropertyRef Name="supplierId" />
+            <PropertyRef Name="supplierName" />
+          </Key>
+          <Property Name="supplierId" Type="int" Nullable="false" />
+          <Property Name="supplierName" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="latestReceiptDate" Type="datetime" />
+          <Property Name="receiptsCount" Type="int" />
+          <Property Name="receiptsSum" Type="float" />
+        </EntityType>
+        <Association Name="FK_Item_PackageType">
+          <End Role="PackageType" Type="Self.PackageType" Multiplicity="1" />
+          <End Role="Item" Type="Self.Item" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="PackageType">
+              <PropertyRef Name="pkgType" />
+            </Principal>
+            <Dependent Role="Item">
+              <PropertyRef Name="itemPackage" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Receipt_Supplier1">
+          <End Role="Supplier" Type="Self.Supplier" Multiplicity="1" />
+          <End Role="Receipt" Type="Self.Receipt" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Supplier">
+              <PropertyRef Name="supplierId" />
+            </Principal>
+            <Dependent Role="Receipt">
+              <PropertyRef Name="supplierId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ReceiptItem_item">
+          <End Role="Item" Type="Self.Item" Multiplicity="1" />
+          <End Role="ReceiptItem" Type="Self.ReceiptItem" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Item">
+              <PropertyRef Name="itemId" />
+            </Principal>
+            <Dependent Role="ReceiptItem">
+              <PropertyRef Name="itemId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ReceiptItem_PackageType">
+          <End Role="PackageType" Type="Self.PackageType" Multiplicity="1" />
+          <End Role="ReceiptItem" Type="Self.ReceiptItem" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="PackageType">
+              <PropertyRef Name="pkgType" />
+            </Principal>
+            <Dependent Role="ReceiptItem">
+              <PropertyRef Name="itemPackage" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ReceiptItem_Receipt1">
+          <End Role="Receipt" Type="Self.Receipt" Multiplicity="1" />
+          <End Role="ReceiptItem" Type="Self.ReceiptItem" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Receipt">
+              <PropertyRef Name="receiptId" />
+            </Principal>
+            <Dependent Role="ReceiptItem">
+              <PropertyRef Name="receiptId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_UserAccount_Role">
+          <End Role="Role" Type="Self.Role" Multiplicity="0..1" />
+          <End Role="UserAccount" Type="Self.UserAccount" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Role">
+              <PropertyRef Name="UserRole" />
+            </Principal>
+            <Dependent Role="UserAccount">
+              <PropertyRef Name="UserRole" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Function Name="spReceiptSummary" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
+        <EntityContainer Name="BHModelStoreContainer">
+          <EntitySet Name="Company" EntityType="Self.Company" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Item" EntityType="Self.Item" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="PackageType" EntityType="Self.PackageType" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Receipt" EntityType="Self.Receipt" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="ReceiptItem" EntityType="Self.ReceiptItem" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Role" EntityType="Self.Role" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Supplier" EntityType="Self.Supplier" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="UserAccount" EntityType="Self.UserAccount" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="vReceiptItem" EntityType="Self.vReceiptItem" store:Type="Views" store:Schema="dbo">
+            <DefiningQuery>SELECT 
+    [vReceiptItem].[receiptId] AS [receiptId], 
+    [vReceiptItem].[itemId] AS [itemId], 
+    [vReceiptItem].[itemPackage] AS [itemPackage], 
+    [vReceiptItem].[itemQnty] AS [itemQnty], 
+    [vReceiptItem].[itemCost] AS [itemCost], 
+    [vReceiptItem].[createdAt] AS [createdAt], 
+    [vReceiptItem].[createdBy] AS [createdBy], 
+    [vReceiptItem].[modifiedAt] AS [modifiedAt], 
+    [vReceiptItem].[modifiedBy] AS [modifiedBy], 
+    [vReceiptItem].[itemName] AS [itemName]
+    FROM [dbo].[vReceiptItem] AS [vReceiptItem]</DefiningQuery>
+          </EntitySet>
+          <EntitySet Name="vReceiptItemsSummary" EntityType="Self.vReceiptItemsSummary" store:Type="Views" store:Schema="dbo">
+            <DefiningQuery>SELECT 
+    [vReceiptItemsSummary].[receiptId] AS [receiptId], 
+    [vReceiptItemsSummary].[itemsCount] AS [itemsCount], 
+    [vReceiptItemsSummary].[totalCost] AS [totalCost]
+    FROM [dbo].[vReceiptItemsSummary] AS [vReceiptItemsSummary]</DefiningQuery>
+          </EntitySet>
+          <EntitySet Name="vReceiptSummary" EntityType="Self.vReceiptSummary" store:Type="Views" store:Schema="dbo">
+            <DefiningQuery>SELECT 
+    [vReceiptSummary].[receiptId] AS [receiptId], 
+    [vReceiptSummary].[supplierId] AS [supplierId], 
+    [vReceiptSummary].[supplierName] AS [supplierName], 
+    [vReceiptSummary].[receiptDate] AS [receiptDate], 
+    [vReceiptSummary].[createdAt] AS [createdAt], 
+    [vReceiptSummary].[createdBy] AS [createdBy], 
+    [vReceiptSummary].[modifiedAt] AS [modifiedAt], 
+    [vReceiptSummary].[modifiedBy] AS [modifiedBy], 
+    [vReceiptSummary].[itemsCount] AS [itemsCount], 
+    [vReceiptSummary].[totalCost] AS [totalCost]
+    FROM [dbo].[vReceiptSummary] AS [vReceiptSummary]</DefiningQuery>
+          </EntitySet>
+          <EntitySet Name="vSupplierItem" EntityType="Self.vSupplierItem" store:Type="Views" store:Schema="dbo">
+            <DefiningQuery>SELECT 
+    [vSupplierItem].[supplierId] AS [supplierId], 
+    [vSupplierItem].[itemId] AS [itemId], 
+    [vSupplierItem].[itemName] AS [itemName], 
+    [vSupplierItem].[itemCategory] AS [itemCategory], 
+    [vSupplierItem].[itemPackage] AS [itemPackage], 
+    [vSupplierItem].[itemPackageDeposit] AS [itemPackageDeposit], 
+    [vSupplierItem].[itemFreight] AS [itemFreight], 
+    [vSupplierItem].[itemLandingCost] AS [itemLandingCost], 
+    [vSupplierItem].[createdAt] AS [createdAt], 
+    [vSupplierItem].[createdBy] AS [createdBy], 
+    [vSupplierItem].[modifiedAt] AS [modifiedAt], 
+    [vSupplierItem].[modifiedBy] AS [modifiedBy], 
+    [vSupplierItem].[isDeleted] AS [isDeleted]
+    FROM [dbo].[vSupplierItem] AS [vSupplierItem]</DefiningQuery>
+          </EntitySet>
+          <EntitySet Name="vSupplierSummary" EntityType="Self.vSupplierSummary" store:Type="Views" store:Schema="dbo">
+            <DefiningQuery>SELECT 
+    [vSupplierSummary].[supplierId] AS [supplierId], 
+    [vSupplierSummary].[supplierName] AS [supplierName], 
+    [vSupplierSummary].[latestReceiptDate] AS [latestReceiptDate], 
+    [vSupplierSummary].[receiptsCount] AS [receiptsCount], 
+    [vSupplierSummary].[receiptsSum] AS [receiptsSum]
+    FROM [dbo].[vSupplierSummary] AS [vSupplierSummary]</DefiningQuery>
+          </EntitySet>
+          <AssociationSet Name="FK_Item_PackageType" Association="Self.FK_Item_PackageType">
+            <End Role="PackageType" EntitySet="PackageType" />
+            <End Role="Item" EntitySet="Item" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Receipt_Supplier1" Association="Self.FK_Receipt_Supplier1">
+            <End Role="Supplier" EntitySet="Supplier" />
+            <End Role="Receipt" EntitySet="Receipt" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ReceiptItem_item" Association="Self.FK_ReceiptItem_item">
+            <End Role="Item" EntitySet="Item" />
+            <End Role="ReceiptItem" EntitySet="ReceiptItem" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ReceiptItem_PackageType" Association="Self.FK_ReceiptItem_PackageType">
+            <End Role="PackageType" EntitySet="PackageType" />
+            <End Role="ReceiptItem" EntitySet="ReceiptItem" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ReceiptItem_Receipt1" Association="Self.FK_ReceiptItem_Receipt1">
+            <End Role="Receipt" EntitySet="Receipt" />
+            <End Role="ReceiptItem" EntitySet="ReceiptItem" />
+          </AssociationSet>
+          <AssociationSet Name="FK_UserAccount_Role" Association="Self.FK_UserAccount_Role">
+            <End Role="Role" EntitySet="Role" />
+            <End Role="UserAccount" EntitySet="UserAccount" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema></edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="BHModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="Item">
+          <Key>
+            <PropertyRef Name="itemId" />
+          </Key>
+          <Property Name="itemId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="itemName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="itemPackage" Type="String" MaxLength="20" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="itemCategory" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
+          <Property Name="createdAt" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="createdBy" Type="String" MaxLength="15" FixedLength="false" Unicode="true" />
+          <Property Name="modifiedAt" Type="DateTime" Precision="3" />
+          <Property Name="modifiedBy" Type="String" MaxLength="15" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="ReceiptItems" Relationship="Self.FK_ReceiptItem_item" FromRole="Item" ToRole="ReceiptItem" />
+          <Property Name="isDeleted" Type="Boolean" />
+          <NavigationProperty Name="PackageType" Relationship="BHModel.FK_Item_PackageType" FromRole="Item" ToRole="PackageType" />
+          <Property Name="itemPackageDeposit" Type="Double" />
+          <Property Name="itemFreight" Type="Double" />
+          <Property Name="itemLandingCost" Type="Double" />
+          </EntityType>
+        <EntityType Name="Receipt">
+          <Key>
+            <PropertyRef Name="receiptId" />
+          </Key>
+          <Property Name="receiptId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="supplierId" Type="Int32" Nullable="false" />
+          <Property Name="receiptDate" Type="DateTime" Precision="3" />
+          <Property Name="createdAt" Type="DateTime" Precision="3" />
+          <Property Name="createdBy" Type="String" MaxLength="15" FixedLength="false" Unicode="true" />
+          <Property Name="modifiedAt" Type="DateTime" Precision="3" />
+          <Property Name="modifiedBy" Type="String" MaxLength="15" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="Supplier" Relationship="Self.FK_Receipt_Supplier1" FromRole="Receipt" ToRole="Supplier" />
+          <NavigationProperty Name="ReceiptItems" Relationship="Self.FK_ReceiptItem_Receipt1" FromRole="Receipt" ToRole="ReceiptItem" />
+          <Property Name="isDeleted" Type="Boolean" />
+          <Property Name="freight" Type="Double" />
+          <Property Name="landingCost" Type="Double" />
+        </EntityType>
+        <EntityType Name="ReceiptItem">
+          <Key>
+            <PropertyRef Name="receiptId" />
+            <PropertyRef Name="itemId" />
+          </Key>
+          <Property Name="receiptId" Type="Int32" Nullable="false" />
+          <Property Name="itemId" Type="Int32" Nullable="false" />
+          <Property Name="itemPackage" Type="String" MaxLength="20" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="itemQnty" Type="Int16" Nullable="false" />
+          <Property Name="itemCost" Type="Double" Nullable="false" />
+          <Property Name="createdAt" Type="DateTime" Precision="3" />
+          <Property Name="createdBy" Type="String" MaxLength="15" FixedLength="false" Unicode="true" />
+          <Property Name="modifiedAt" Type="DateTime" Precision="3" />
+          <Property Name="modifiedBy" Type="String" MaxLength="15" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="Item" Relationship="Self.FK_ReceiptItem_item" FromRole="ReceiptItem" ToRole="Item" />
+          <NavigationProperty Name="Receipt" Relationship="Self.FK_ReceiptItem_Receipt1" FromRole="ReceiptItem" ToRole="Receipt" />
+          <Property Name="isDeleted" Type="Boolean" />
+          <NavigationProperty Name="PackageType" Relationship="BHModel.FK_ReceiptItem_PackageType" FromRole="ReceiptItem" ToRole="PackageType" />
+          <Property Name="itemPackageCount" Type="Int16" />
+          <Property Name="itemPackageDeposit" Type="Double" />
+          <Property Name="itemFreight" Type="Double" />
+          <Property Name="itemLandingCost" Type="Double" />
+          </EntityType>
+        <EntityType Name="Role">
+          <Key>
+            <PropertyRef Name="UserRole" />
+          </Key>
+          <Property Name="UserRole" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Discription" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="UserAccounts" Relationship="Self.FK_UserAccount_Role" FromRole="Role" ToRole="UserAccount" />
+        </EntityType>
+        <EntityType Name="Supplier">
+          <Key>
+            <PropertyRef Name="supplierId" />
+          </Key>
+          <Property Name="supplierId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="supplierName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="supplierPhone" Type="String" MaxLength="12" FixedLength="false" Unicode="false" />
+          <Property Name="supplierAddress" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="supplierRemark" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="createdAt" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="createdBy" Type="String" MaxLength="15" FixedLength="false" Unicode="true" />
+          <Property Name="modifiedAt" Type="DateTime" Precision="3" />
+          <Property Name="modifiedBy" Type="String" MaxLength="15" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="Receipts" Relationship="Self.FK_Receipt_Supplier1" FromRole="Supplier" ToRole="Receipt" />
+          <Property Name="isDeleted" Type="Boolean" />
+        </EntityType>
+        <EntityType Name="UserAccount">
+          <Key>
+            <PropertyRef Name="UserLogin" />
+          </Key>
+          <Property Name="UserLogin" Type="String" MaxLength="15" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="UserPassword" Type="String" MaxLength="15" FixedLength="false" Unicode="false" />
+          <Property Name="UserName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="UserRole" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="pref_autorefreshEnabled" Type="Boolean" />
+          <Property Name="pref_autorefreshInterval" Type="Int32" />
+          <Property Name="IsLoggedIn" Type="Boolean" />
+          <Property Name="LoggedInAt" Type="DateTime" Precision="3" />
+          <Property Name="LoggedOutAt" Type="DateTime" Precision="3" />
+          <NavigationProperty Name="Role" Relationship="Self.FK_UserAccount_Role" FromRole="UserAccount" ToRole="Role" />
+        </EntityType>
+        <EntityType Name="vReceiptItemsSummary">
+          <Key>
+            <PropertyRef Name="receiptId" />
+          </Key>
+          <Property Name="receiptId" Type="Int32" Nullable="false" />
+          <Property Name="itemsCount" Type="Int32" />
+          <Property Name="totalCost" Type="Double" />
+        </EntityType>
+        <EntityType Name="vSupplierItem">
+          <Key>
+            <PropertyRef Name="itemId" />
+          </Key>
+          <Property Name="supplierId" Type="Int32" Nullable="false" />
+          <Property Name="itemId" Type="Int32" Nullable="false" />
+          <Property Name="itemName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="itemPackage" Type="String" MaxLength="20" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="itemCategory" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
+          <Property Name="createdAt" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="createdBy" Type="String" MaxLength="15" FixedLength="false" Unicode="true" />
+          <Property Name="modifiedAt" Type="DateTime" Precision="3" />
+          <Property Name="modifiedBy" Type="String" MaxLength="15" FixedLength="false" Unicode="true" />
+          <Property Name="itemPackageDeposit" Type="Double" />
+          <Property Name="itemFreight" Type="Double" />
+          <Property Name="itemLandingCost" Type="Double" />
+          <Property Name="isDeleted" Type="Boolean" />
+        </EntityType>
+        <Association Name="FK_ReceiptItem_item">
+          <End Role="Item" Type="Self.Item" Multiplicity="1" />
+          <End Role="ReceiptItem" Type="Self.ReceiptItem" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Item">
+              <PropertyRef Name="itemId" />
+            </Principal>
+            <Dependent Role="ReceiptItem">
+              <PropertyRef Name="itemId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Receipt_Supplier1">
+          <End Role="Supplier" Type="Self.Supplier" Multiplicity="1" />
+          <End Role="Receipt" Type="Self.Receipt" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Supplier">
+              <PropertyRef Name="supplierId" />
+            </Principal>
+            <Dependent Role="Receipt">
+              <PropertyRef Name="supplierId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ReceiptItem_Receipt1">
+          <End Role="Receipt" Type="Self.Receipt" Multiplicity="1" />
+          <End Role="ReceiptItem" Type="Self.ReceiptItem" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Receipt">
+              <PropertyRef Name="receiptId" />
+            </Principal>
+            <Dependent Role="ReceiptItem">
+              <PropertyRef Name="receiptId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_UserAccount_Role">
+          <End Role="Role" Type="Self.Role" Multiplicity="0..1" />
+          <End Role="UserAccount" Type="Self.UserAccount" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Role">
+              <PropertyRef Name="UserRole" />
+            </Principal>
+            <Dependent Role="UserAccount">
+              <PropertyRef Name="UserRole" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="Entities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="Items" EntityType="Self.Item" />
+          <EntitySet Name="Receipts" EntityType="Self.Receipt" />
+          <EntitySet Name="ReceiptItems" EntityType="Self.ReceiptItem" />
+          <EntitySet Name="Roles" EntityType="Self.Role" />
+          <EntitySet Name="Suppliers" EntityType="Self.Supplier" />
+          <EntitySet Name="UserAccounts" EntityType="Self.UserAccount" />
+          <EntitySet Name="vReceiptItemsSummaries" EntityType="Self.vReceiptItemsSummary" />
+          <EntitySet Name="vSupplierItems" EntityType="Self.vSupplierItem" />
+          <AssociationSet Name="FK_ReceiptItem_item" Association="Self.FK_ReceiptItem_item">
+            <End Role="Item" EntitySet="Items" />
+            <End Role="ReceiptItem" EntitySet="ReceiptItems" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Receipt_Supplier1" Association="Self.FK_Receipt_Supplier1">
+            <End Role="Supplier" EntitySet="Suppliers" />
+            <End Role="Receipt" EntitySet="Receipts" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ReceiptItem_Receipt1" Association="Self.FK_ReceiptItem_Receipt1">
+            <End Role="Receipt" EntitySet="Receipts" />
+            <End Role="ReceiptItem" EntitySet="ReceiptItems" />
+          </AssociationSet>
+          <AssociationSet Name="FK_UserAccount_Role" Association="Self.FK_UserAccount_Role">
+            <End Role="Role" EntitySet="Roles" />
+            <End Role="UserAccount" EntitySet="UserAccounts" />
+          </AssociationSet>
+          <EntitySet Name="vReceiptItems" EntityType="BHModel.vReceiptItem" />
+          <EntitySet Name="PackageTypes" EntityType="BHModel.PackageType" />
+          <AssociationSet Name="FK_Item_PackageType" Association="BHModel.FK_Item_PackageType">
+            <End Role="PackageType" EntitySet="PackageTypes" />
+            <End Role="Item" EntitySet="Items" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ReceiptItem_PackageType" Association="BHModel.FK_ReceiptItem_PackageType">
+            <End Role="PackageType" EntitySet="PackageTypes" />
+            <End Role="ReceiptItem" EntitySet="ReceiptItems" />
+          </AssociationSet>
+          <EntitySet Name="Companies" EntityType="BHModel.Company" />
+          <FunctionImport Name="spReceiptSummary" ReturnType="Collection(BHModel.spReceiptSummary_Result)" />
+          <EntitySet Name="vReceiptSummaries" EntityType="BHModel.vReceiptSummary" />
+          <EntitySet Name="vSupplierSummaries" EntityType="BHModel.vSupplierSummary" />
+          </EntityContainer>
+        <EntityType Name="vReceiptItem">
+          <Key>
+            <PropertyRef Name="receiptId" />
+            <PropertyRef Name="itemId" />
+          </Key>
+          <Property Name="receiptId" Type="Int32" Nullable="false" />
+          <Property Name="itemId" Type="Int32" Nullable="false" />
+          <Property Name="itemPackage" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="itemQnty" Type="Int16" Nullable="false" />
+          <Property Name="itemCost" Type="Double" Nullable="false" />
+          <Property Name="createdAt" Type="DateTime" Precision="3" />
+          <Property Name="createdBy" Type="String" MaxLength="15" FixedLength="false" Unicode="true" />
+          <Property Name="modifiedAt" Type="DateTime" Precision="3" />
+          <Property Name="modifiedBy" Type="String" MaxLength="15" FixedLength="false" Unicode="true" />
+          <Property Name="itemName" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+        </EntityType>
+        <EntityType Name="PackageType">
+          <Key>
+            <PropertyRef Name="pkgType" />
+          </Key>
+          <Property Name="pkgType" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="true" />
+          <Property Name="isDeleted" Type="Boolean" />
+          <NavigationProperty Name="Items" Relationship="BHModel.FK_Item_PackageType" FromRole="PackageType" ToRole="Item" />
+          <NavigationProperty Name="ReceiptItems" Relationship="BHModel.FK_ReceiptItem_PackageType" FromRole="PackageType" ToRole="ReceiptItem" />
+        </EntityType>
+        <Association Name="FK_Item_PackageType">
+          <End Type="BHModel.PackageType" Role="PackageType" Multiplicity="1" />
+          <End Type="BHModel.Item" Role="Item" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="PackageType">
+              <PropertyRef Name="pkgType" />
+            </Principal>
+            <Dependent Role="Item">
+              <PropertyRef Name="itemPackage" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ReceiptItem_PackageType">
+          <End Type="BHModel.PackageType" Role="PackageType" Multiplicity="1" />
+          <End Type="BHModel.ReceiptItem" Role="ReceiptItem" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="PackageType">
+              <PropertyRef Name="pkgType" />
+            </Principal>
+            <Dependent Role="ReceiptItem">
+              <PropertyRef Name="itemPackage" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="Company">
+          <Key>
+            <PropertyRef Name="companyName" />
+          </Key>
+          <Property Name="companyName" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="companyHeaderName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="receiptListDefaultDateRange" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="receiptItemConfirmDeletion" Type="Boolean" />
+          <Property Name="gblShowPermanentDeleteAuthUsers" Type="Boolean" />
+          <Property Name="companyAddress" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="companyPhone" Type="String" MaxLength="13" FixedLength="true" Unicode="true" />
+          <Property Name="companyPhone2" Type="String" MaxLength="13" FixedLength="true" Unicode="true" />
+          <Property Name="gblShowTimeOfDatetimeRange" Type="Boolean" />
+        </EntityType>
+        <ComplexType Name="spReceiptSummary_Result">
+          <Property Type="String" Name="receiptId" Nullable="true" MaxLength="9" />
+          <Property Type="String" Name="supplierId" Nullable="true" MaxLength="9" />
+          <Property Type="String" Name="supplierName" Nullable="true" MaxLength="50" />
+          <Property Type="DateTime" Name="receiptDate" Nullable="true" Precision="23" />
+          <Property Type="DateTime" Name="createdAt" Nullable="true" Precision="23" />
+          <Property Type="String" Name="createdBy" Nullable="true" MaxLength="15" />
+          <Property Type="DateTime" Name="modifiedAt" Nullable="true" Precision="23" />
+          <Property Type="String" Name="modifiedBy" Nullable="true" MaxLength="15" />
+          <Property Type="String" Name="itemsCount" Nullable="true" MaxLength="3" />
+          <Property Type="String" Name="totalCost" Nullable="true" MaxLength="12" />
+        </ComplexType>
+        <EntityType Name="vReceiptSummary">
+          <Key>
+            <PropertyRef Name="receiptId" />
+          </Key>
+          <Property Name="receiptId" Type="Int32" Nullable="false" />
+          <Property Name="supplierId" Type="Int32" Nullable="false" />
+          <Property Name="supplierName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="receiptDate" Type="DateTime" Precision="3" />
+          <Property Name="createdAt" Type="DateTime" Precision="3" />
+          <Property Name="createdBy" Type="String" MaxLength="15" FixedLength="false" Unicode="true" />
+          <Property Name="modifiedAt" Type="DateTime" Precision="3" />
+          <Property Name="modifiedBy" Type="String" MaxLength="15" FixedLength="false" Unicode="true" />
+          <Property Name="itemsCount" Type="Int32" />
+          <Property Name="totalCost" Type="Double" />
+        </EntityType>
+        <EntityType Name="vSupplierSummary">
+          <Key>
+            <PropertyRef Name="supplierId" />
+            <PropertyRef Name="supplierName" />
+          </Key>
+          <Property Name="supplierId" Type="Int32" Nullable="false" />
+          <Property Name="supplierName" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="latestReceiptDate" Type="DateTime" Precision="3" />
+          <Property Name="receiptsCount" Type="Int32" />
+          <Property Name="receiptsSum" Type="Double" />
+        </EntityType>
+        </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="BHModelStoreContainer" CdmEntityContainer="Entities">
+          <EntitySetMapping Name="Items">
+            <EntityTypeMapping TypeName="BHModel.Item">
+              <MappingFragment StoreEntitySet="Item">
+                <ScalarProperty Name="itemLandingCost" ColumnName="itemLandingCost" />
+                <ScalarProperty Name="itemFreight" ColumnName="itemFreight" />
+                <ScalarProperty Name="itemPackageDeposit" ColumnName="itemPackageDeposit" />
+                <ScalarProperty Name="isDeleted" ColumnName="isDeleted" />
+                <ScalarProperty Name="itemId" ColumnName="itemId" />
+                <ScalarProperty Name="itemName" ColumnName="itemName" />
+                <ScalarProperty Name="itemPackage" ColumnName="itemPackage" />
+                <ScalarProperty Name="itemCategory" ColumnName="itemCategory" />
+                <ScalarProperty Name="createdAt" ColumnName="createdAt" />
+                <ScalarProperty Name="createdBy" ColumnName="createdBy" />
+                <ScalarProperty Name="modifiedAt" ColumnName="modifiedAt" />
+                <ScalarProperty Name="modifiedBy" ColumnName="modifiedBy" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Receipts">
+            <EntityTypeMapping TypeName="BHModel.Receipt">
+              <MappingFragment StoreEntitySet="Receipt">
+                <ScalarProperty Name="landingCost" ColumnName="landingCost" />
+                <ScalarProperty Name="freight" ColumnName="freight" />
+                <ScalarProperty Name="isDeleted" ColumnName="isDeleted" />
+                <ScalarProperty Name="receiptId" ColumnName="receiptId" />
+                <ScalarProperty Name="supplierId" ColumnName="supplierId" />
+                <ScalarProperty Name="receiptDate" ColumnName="receiptDate" />
+                <ScalarProperty Name="createdAt" ColumnName="createdAt" />
+                <ScalarProperty Name="createdBy" ColumnName="createdBy" />
+                <ScalarProperty Name="modifiedAt" ColumnName="modifiedAt" />
+                <ScalarProperty Name="modifiedBy" ColumnName="modifiedBy" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="ReceiptItems">
+            <EntityTypeMapping TypeName="BHModel.ReceiptItem">
+              <MappingFragment StoreEntitySet="ReceiptItem">
+                <ScalarProperty Name="itemLandingCost" ColumnName="itemLandingCost" />
+                <ScalarProperty Name="itemFreight" ColumnName="itemFreight" />
+                <ScalarProperty Name="itemPackageDeposit" ColumnName="itemPackageDeposit" />
+                <ScalarProperty Name="itemPackageCount" ColumnName="itemPackageCount" />
+                <ScalarProperty Name="isDeleted" ColumnName="isDeleted" />
+                <ScalarProperty Name="receiptId" ColumnName="receiptId" />
+                <ScalarProperty Name="itemId" ColumnName="itemId" />
+                <ScalarProperty Name="itemPackage" ColumnName="itemPackage" />
+                <ScalarProperty Name="itemQnty" ColumnName="itemQnty" />
+                <ScalarProperty Name="itemCost" ColumnName="itemCost" />
+                <ScalarProperty Name="createdAt" ColumnName="createdAt" />
+                <ScalarProperty Name="createdBy" ColumnName="createdBy" />
+                <ScalarProperty Name="modifiedAt" ColumnName="modifiedAt" />
+                <ScalarProperty Name="modifiedBy" ColumnName="modifiedBy" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Roles">
+            <EntityTypeMapping TypeName="BHModel.Role">
+              <MappingFragment StoreEntitySet="Role">
+                <ScalarProperty Name="UserRole" ColumnName="UserRole" />
+                <ScalarProperty Name="Discription" ColumnName="Discription" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Suppliers">
+            <EntityTypeMapping TypeName="BHModel.Supplier">
+              <MappingFragment StoreEntitySet="Supplier">
+                <ScalarProperty Name="isDeleted" ColumnName="isDeleted" />
+                <ScalarProperty Name="supplierId" ColumnName="supplierId" />
+                <ScalarProperty Name="supplierName" ColumnName="supplierName" />
+                <ScalarProperty Name="supplierPhone" ColumnName="supplierPhone" />
+                <ScalarProperty Name="supplierAddress" ColumnName="supplierAddress" />
+                <ScalarProperty Name="supplierRemark" ColumnName="supplierRemark" />
+                <ScalarProperty Name="createdAt" ColumnName="createdAt" />
+                <ScalarProperty Name="createdBy" ColumnName="createdBy" />
+                <ScalarProperty Name="modifiedAt" ColumnName="modifiedAt" />
+                <ScalarProperty Name="modifiedBy" ColumnName="modifiedBy" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="UserAccounts">
+            <EntityTypeMapping TypeName="BHModel.UserAccount">
+              <MappingFragment StoreEntitySet="UserAccount">
+                <ScalarProperty Name="UserLogin" ColumnName="UserLogin" />
+                <ScalarProperty Name="UserPassword" ColumnName="UserPassword" />
+                <ScalarProperty Name="UserName" ColumnName="UserName" />
+                <ScalarProperty Name="UserRole" ColumnName="UserRole" />
+                <ScalarProperty Name="pref_autorefreshEnabled" ColumnName="pref_autorefreshEnabled" />
+                <ScalarProperty Name="pref_autorefreshInterval" ColumnName="pref_autorefreshInterval" />
+                <ScalarProperty Name="IsLoggedIn" ColumnName="IsLoggedIn" />
+                <ScalarProperty Name="LoggedInAt" ColumnName="LoggedInAt" />
+                <ScalarProperty Name="LoggedOutAt" ColumnName="LoggedOutAt" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="vReceiptItemsSummaries">
+            <EntityTypeMapping TypeName="BHModel.vReceiptItemsSummary">
+              <MappingFragment StoreEntitySet="vReceiptItemsSummary">
+                <ScalarProperty Name="receiptId" ColumnName="receiptId" />
+                <ScalarProperty Name="itemsCount" ColumnName="itemsCount" />
+                <ScalarProperty Name="totalCost" ColumnName="totalCost" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="vSupplierItems">
+            <EntityTypeMapping TypeName="BHModel.vSupplierItem">
+              <MappingFragment StoreEntitySet="vSupplierItem">
+                <ScalarProperty Name="isDeleted" ColumnName="isDeleted" />
+                <ScalarProperty Name="itemLandingCost" ColumnName="itemLandingCost" />
+                <ScalarProperty Name="itemFreight" ColumnName="itemFreight" />
+                <ScalarProperty Name="itemPackageDeposit" ColumnName="itemPackageDeposit" />
+                <ScalarProperty Name="supplierId" ColumnName="supplierId" />
+                <ScalarProperty Name="itemId" ColumnName="itemId" />
+                <ScalarProperty Name="itemName" ColumnName="itemName" />
+                <ScalarProperty Name="itemPackage" ColumnName="itemPackage" />
+                <ScalarProperty Name="itemCategory" ColumnName="itemCategory" />
+                <ScalarProperty Name="createdAt" ColumnName="createdAt" />
+                <ScalarProperty Name="createdBy" ColumnName="createdBy" />
+                <ScalarProperty Name="modifiedAt" ColumnName="modifiedAt" />
+                <ScalarProperty Name="modifiedBy" ColumnName="modifiedBy" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="vReceiptItems">
+            <EntityTypeMapping TypeName="BHModel.vReceiptItem">
+              <MappingFragment StoreEntitySet="vReceiptItem">
+                <ScalarProperty Name="itemName" ColumnName="itemName" />
+                <ScalarProperty Name="modifiedBy" ColumnName="modifiedBy" />
+                <ScalarProperty Name="modifiedAt" ColumnName="modifiedAt" />
+                <ScalarProperty Name="createdBy" ColumnName="createdBy" />
+                <ScalarProperty Name="createdAt" ColumnName="createdAt" />
+                <ScalarProperty Name="itemCost" ColumnName="itemCost" />
+                <ScalarProperty Name="itemQnty" ColumnName="itemQnty" />
+                <ScalarProperty Name="itemPackage" ColumnName="itemPackage" />
+                <ScalarProperty Name="itemId" ColumnName="itemId" />
+                <ScalarProperty Name="receiptId" ColumnName="receiptId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="PackageTypes">
+            <EntityTypeMapping TypeName="BHModel.PackageType">
+              <MappingFragment StoreEntitySet="PackageType">
+                <ScalarProperty Name="isDeleted" ColumnName="isDeleted" />
+                <ScalarProperty Name="pkgType" ColumnName="pkgType" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Companies">
+            <EntityTypeMapping TypeName="BHModel.Company">
+              <MappingFragment StoreEntitySet="Company">
+                <ScalarProperty Name="gblShowTimeOfDatetimeRange" ColumnName="gblShowTimeOfDatetimeRange" />
+                <ScalarProperty Name="companyPhone2" ColumnName="companyPhone2" />
+                <ScalarProperty Name="companyPhone" ColumnName="companyPhone" />
+                <ScalarProperty Name="companyAddress" ColumnName="companyAddress" />
+                <ScalarProperty Name="gblShowPermanentDeleteAuthUsers" ColumnName="gblShowPermanentDeleteAuthUsers" />
+                <ScalarProperty Name="receiptItemConfirmDeletion" ColumnName="receiptItemConfirmDeletion" />
+                <ScalarProperty Name="receiptListDefaultDateRange" ColumnName="receiptListDefaultDateRange" />
+                <ScalarProperty Name="companyHeaderName" ColumnName="companyHeaderName" />
+                <ScalarProperty Name="companyName" ColumnName="companyName" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <FunctionImportMapping FunctionImportName="spReceiptSummary" FunctionName="BHModel.Store.spReceiptSummary">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="BHModel.spReceiptSummary_Result">
+                <ScalarProperty Name="receiptId" ColumnName="receiptId" />
+                <ScalarProperty Name="supplierId" ColumnName="supplierId" />
+                <ScalarProperty Name="supplierName" ColumnName="supplierName" />
+                <ScalarProperty Name="receiptDate" ColumnName="receiptDate" />
+                <ScalarProperty Name="createdAt" ColumnName="createdAt" />
+                <ScalarProperty Name="createdBy" ColumnName="createdBy" />
+                <ScalarProperty Name="modifiedAt" ColumnName="modifiedAt" />
+                <ScalarProperty Name="modifiedBy" ColumnName="modifiedBy" />
+                <ScalarProperty Name="itemsCount" ColumnName="itemsCount" />
+                <ScalarProperty Name="totalCost" ColumnName="totalCost" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <EntitySetMapping Name="vReceiptSummaries">
+            <EntityTypeMapping TypeName="BHModel.vReceiptSummary">
+              <MappingFragment StoreEntitySet="vReceiptSummary">
+                <ScalarProperty Name="totalCost" ColumnName="totalCost" />
+                <ScalarProperty Name="itemsCount" ColumnName="itemsCount" />
+                <ScalarProperty Name="modifiedBy" ColumnName="modifiedBy" />
+                <ScalarProperty Name="modifiedAt" ColumnName="modifiedAt" />
+                <ScalarProperty Name="createdBy" ColumnName="createdBy" />
+                <ScalarProperty Name="createdAt" ColumnName="createdAt" />
+                <ScalarProperty Name="receiptDate" ColumnName="receiptDate" />
+                <ScalarProperty Name="supplierName" ColumnName="supplierName" />
+                <ScalarProperty Name="supplierId" ColumnName="supplierId" />
+                <ScalarProperty Name="receiptId" ColumnName="receiptId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="vSupplierSummaries">
+            <EntityTypeMapping TypeName="BHModel.vSupplierSummary">
+              <MappingFragment StoreEntitySet="vSupplierSummary">
+                <ScalarProperty Name="receiptsSum" ColumnName="receiptsSum" />
+                <ScalarProperty Name="receiptsCount" ColumnName="receiptsCount" />
+                <ScalarProperty Name="latestReceiptDate" ColumnName="latestReceiptDate" />
+                <ScalarProperty Name="supplierName" ColumnName="supplierName" />
+                <ScalarProperty Name="supplierId" ColumnName="supplierId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="true" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>

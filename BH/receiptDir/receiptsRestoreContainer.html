@@ -1,0 +1,58 @@
+﻿
+<div pageslide 
+     ps-open="isBottomSlideOpen" 
+     onclose="onPageSlideClose" 
+     ps-side="bottom" 
+     ps-click-outside="'true'" 
+     ps-key-listener="true" 
+     ps-size="100%" 
+     ps-class="bg-black-overlay"
+     ps-container="receiptsContainer"><!--ps-body-class="bg-black"-->
+    <div class="bg-black shadow-top" style="margin-top:50px; padding:0 20px 50px 20px; height:100%;">
+        <div class="banner">
+            <span class="text-lg">إسترجاع الإيصالات المحذوفة</span>
+            <button ng-click="isBottomSlideOpen=!isBottomSlideOpen" class="btn-circle"><i class="fa fa-chevron-down"></i></button>
+        </div>
+        <spin-Kit ng-show="isLoading_receiptRemovedList" class="center"></spin-Kit>
+
+        <div class="list-group scroll-custom" style="overflow-y:scroll; max-height:300px;">
+            <div class="list-group-item" ng-repeat="receiptRemoved in receiptsRemovedList track by receiptRemoved.receiptId">
+                <div class="row">
+                    <div class="col-sm-6">
+                        <div class="list-group-item-heading">{{receiptRemoved.supplierName}}</div>
+                        <div class="list-group-item-text">{{receiptRemoved.receiptDate}}</div>
+                    </div>
+                    <div class="col-sm-6">
+                        <button class="btn-circle pull-left"
+                                ng-click="restoreReceipt(receiptRemoved)"
+                                uib-tooltip="إسترجاع"
+                                type="button">
+                            <i class="fa fa-history"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <span class="badge" ng-bind="receiptsRemovedList.length || 0"></span>
+        <!--<table class="table table-hover">
+        <thead>
+            <tr>
+                <th></th>
+            </tr>
+        </thead>
+    </table>-->
+
+        <!--<table tr-ng-grid="" ng-show="receipts.length>0 || filterBy!=null || (filterByFields | json)!='{}'"
+            items="receipts"
+            fields="['receiptId', 'receiptDate', 'supplierName']"
+            order-by="'receiptDate'"
+            order-by-reverse="true"
+            total-items="recordCount"
+            enable-filtering="false"
+            enable-sorting="false"
+            page-items="7"
+            on-data-required="trNgGridGetServerSideItems(currentPage, pageItems, filterBy, filterByFields, orderBy, orderByReverse)"
+            selection-mode="None">
+        </table>-->
+    </div>
+</div>

@@ -1,0 +1,70 @@
+﻿<div class="modal-content">
+    <form name="suppFrm" class="form-horizontal" role="form" ng-cloak novalidate>
+        <!--ng-class="{'has-error':suppFrm.$invalid}"-->
+        <div class="modal-header">
+            <div class="banner">
+                <span class="modal-title text-lg">
+                    <span class="fa fa-user-circle-o"></span>&nbsp;
+                    {{(mode==='add' && !supplier.supplierName.length) ? ' إضافة مورّد جديد': supplier.supplierName}}&nbsp;
+                </span>
+                <span class="fa-stack fa-lg pull-left"
+                      ng-style="{'color':suppFrm.$invalid ?'#ccc':'#5cb85c'}"
+                      uib-tooltip="الحد الأدنى من البيانات المطلوبة مكتمل">
+                    <i class="fa fa-circle-thin fa-stack-2x"></i>
+                    <i class="fa fa-check fa-stack-1x"></i>
+                </span>
+                <span class="fa-stack fa-lg pull-left"
+                      ng-style="{'color':suppFrm.$dirty ?'#f0ad4e':'#ccc'}"
+                      uib-tooltip="حصل تعديل للبيانات">
+                    <i class="fa fa-circle-thin fa-stack-2x"></i>
+                    <i class="fa fa-pencil fa-stack-1x"></i>
+                </span>
+            </div>
+        </div>
+        <div class="modal-body bg-gray-soft">
+            <div include-same-scope="supplierDir/supplierTpl.html"></div>
+        </div>
+        <div class="modal-footer">
+            <button class="btn btn-info"
+                    ng-if="!suppFrm.$dirty" autofocus
+                    ng-click="cancelModal('[Nothing changed, just closing the modal]')">
+                إغلاق
+            </button>
+            <button class="btn btn-default"
+                    ng-disabled="!suppFrm.$dirty"
+                    mwl-confirm
+                    title="{{ msgConfirmCancel.title }}"
+                    message="{{ msgConfirmCancel.message }}"
+                    confirm-text="{{ msgConfirmCancel.confirmText }}"
+                    cancel-text="{{ msgConfirmCancel.cancelText }}"
+                    placement="{{ msgConfirmCancel.placement }}"
+                    on-confirm="cancelModal('[User confirmed dismissal of data]_ignorChangesAndExit')"
+                    on-cancel="'noting to do, just keep in place'"
+                    confirm-button-type="danger"
+                    cancel-button-type="default">
+                إلغاء
+            </button>
+            <button ng-if="mode=='add'"
+                    ng-disabled="suppFrm.$invalid"
+                    class="btn btn-success" ng-click="addSupplier(supplier)"><i class="fa fa-plus"></i>&nbsp;إضافة</button>
+            <button ng-if="mode=='edit'"
+                    ng-disabled="!suppFrm.$dirty && suppFrm.$valid" 
+                    class="btn btn-primary" ng-click="saveSupplier(supplier)"><i class="fa fa-check"></i>&nbsp;حفظ</button>
+            <button class="btn btn-danger btn-outline"
+                    ng-if="enableRemove"
+                    mwl-confirm
+                    title="{{ msgConfirmRemove.title }}"
+                    message="{{ msgConfirmRemove.message }}"
+                    confirm-text="{{ msgConfirmRemove.confirmText }}"
+                    cancel-text="{{ msgConfirmRemove.cancelText }}"
+                    placement="{{ msgConfirmRemove.placement }}"
+                    on-confirm="removeSupplier(supplier)"
+                    on-cancel="'noting to do, just keep in place'"
+                    confirm-button-type="danger"
+                    cancel-button-type="default"
+                    uib-tooltip="حذف الصنف">
+                حذف
+            </button>
+        </div>
+    </form>
+</div>

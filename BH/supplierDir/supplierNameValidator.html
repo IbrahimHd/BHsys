@@ -1,0 +1,33 @@
+﻿<md-autocomplete md-floating-label="إسم المورد"
+                     class="input-lg text-lg"
+                     md-search-text="searchText"
+                     md-items="supplier in supplierSearch(searchText)"
+                     md-search-text-change="supplierSearch(searchText)"
+                     md-selected-item="supplier"
+                     md-item-text="supplier.supplierName"
+                     md-no-cache="noCache"
+                     md-delay="500"
+                     md-input-maxlength="30"
+                     md-input-minlength="1"
+                     md-input-name="searchSupplier"
+                     md-clear-button="true"
+                     md-autofocus="true"
+                     required>
+        <md-item-template>
+            <img class="img-circle" src="../images/avatar.png" width="32" height="32" />
+            <span class="item-title bold" md-highlight-text="searchText" md-highlight-flags="^i">{{supplier.supplierName}}</span><!--"gi"-->&nbsp;
+            <span class="fa fa-phone"></span>
+            <span>{{supplier.supplierPhone}}</span>&nbsp;
+            <span class="fa fa-map-marker"></span>
+            <span class="item-metadata">
+                <strong>{{supplier.supplierAddress}}</strong>
+                &nbsp;|
+                <span class="label-underline">{{supplier.supplierRemark}}</span>
+                &nbsp;|
+            </span>
+        </md-item-template>
+        <!--
+        <md-not-found>
+        </md-not-found>
+        -->
+    </md-autocomplete>

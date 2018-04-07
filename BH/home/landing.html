@@ -1,0 +1,20 @@
+﻿
+<div class="row removeNgtvMrgn" id="landing" style="min-height:500px">
+    <div class="col-md-12">
+        <a class="btn btn-default" ng-click="isBottomMenuOpen=!isBottomMenuOpen">Open Options</a>
+        <div pageslide ps-open="isBottomMenuOpen" onclose="onPageSlideClose" ps-container="landing" ps-side="bottom">
+            <div style="padding:20px">
+                <h2>Hello Pageslide</h2>
+                <p>Put here whatever you want</p>
+                <a ng-click="isBottomMenuOpen=!isBottomMenuOpen" class="button">Close</a>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-12">
+        <div include-same-scope="home/viz.html"></div>
+    </div>
+    <h3>Landing Page</h3>
+    {{authorizedRoles}}
+    <p ng-if="isAuthorized(authorizedRoles)">show this only to {{authorizedRoles}}</p>
+    {{isAuthorized(currentUser.UserLogin)}}
+</div>

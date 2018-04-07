@@ -1,0 +1,40 @@
+﻿<div name="sideForm">
+    {{$state.includes('*supplier*')}}
+    <div class="row removeNgtvMrgn">
+        <div class="col-lg-6 col-md-6">
+            <div class='input input-fumi'style="color:#00aeef !important;font-family:'al-jazeera-arabic-regular'!important;">
+                <label class='input_label input_label-fumi'>
+                    <i class="icon icon-fumi fa fa-fw fa-id-card-o"></i>
+                </label>                
+                <div class='input_field input_field-fumi' 
+                     style="padding-top:0px;padding-right:25px;padding-left:30px;font-size:0.6em;"
+                     include-same-scope="supplierDir/supplierNameValidator.html"></div>
+            </div>
+            <my-input ng-model="supplier.supplierName"
+                        label="إسم المورّد"
+                        name="supplierName"
+                        icon="fa fa-fw fa-id-card-o"
+                        theme="fumi"
+                        ng-minlength='2'
+                        ng-required="true">
+            </my-input>
+            <my-input type="text"
+                        ng-model="supplier.supplierPhone"
+                        label="رقم الهاتف"
+                        name="supplierPhone"
+                        icon="fa fa-fw fa-phone"
+                        ng-required="true">
+            </my-input>
+        </div>
+        <div class="col-lg-6 col-md-6">
+            <my-input type="text"
+                        ng-model="supplier.supplierAddress"
+                        label="العنوان"
+                        name="supplierAddress"
+                        icon="fa fa-fw fa-map-marker"
+                        ng-required="true">
+            </my-input>
+        </div>
+    </div>
+</div>
+        

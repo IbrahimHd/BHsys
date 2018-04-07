@@ -1,0 +1,48 @@
+﻿<form ng-submit="$event.preventDefault()" name="searchSupplierForm" id="searchSupplierForm">
+    <md-autocomplete md-floating-label="بحث عن مورّد"
+                     class="input-lg text-lg"
+                     md-menu-class=""
+                     flex=""
+                     md-items="supplier in querySearch(searchText)"
+                     md-item-text="supplier.supplierName"
+                     md-search-text-change="querySearch(searchText)"
+                     md-search-text="searchText"
+                     md-selected-item="supplier"
+                     md-selected-item-change="setReceiptSupplierInfo(supplier); loadMostCommomItemsBySelectedSupplier(supplier.supplierId)"
+                     md-no-cache="noCache"
+                     md-delay="500"
+                     md-input-maxlength="30"
+                     md-input-minlength="1"
+                     md-input-name="searchSupplier"
+                     md-clear-button="true"
+                     md-autofocus="true"
+                     required>
+        <md-item-template>
+            <img class="img-circle" src="../images/avatar.png" width="32" height="32" />
+            <span class="item-title bold" md-highlight-text="searchText" md-highlight-flags="^i">{{supplier.supplierName}}</span><!--"gi"-->&nbsp;
+            <span class="fa fa-phone"></span>
+            <span>{{supplier.supplierPhone}}</span>&nbsp;
+            <span class="fa fa-map-marker"></span>
+            <span class="item-metadata">
+                <strong>{{supplier.supplierAddress}}</strong>
+                &nbsp;|
+                <span class="label-underline">{{supplier.supplierRemark}}</span>
+                &nbsp;|
+            </span>
+        </md-item-template>
+        <md-not-found>
+            لم يتم العثور على "{{searchText}}"
+            <!--ui-sref="modalView({ htmlUrl:'supplierDir/supplier.html', 
+                                     ctrlUrl:'supplierDir/supplierCtrl.js', 
+                                     ctrlName:'supplierCtrl', 
+                                     dataLoad:supplierData(), 
+                                     mode:'add'})"-->
+            <a ng-click="supplierOpenModal('add','','lg')">أضف مورّد جديد</a>
+        </md-not-found>
+        <div ng-messages="searchSupplierForm.searchSupplier.$error" ng-if="searchSupplierForm.searchSupplier.$touched">
+            <div ng-message="required">قم بطباعة الإسم الذي  <b>تبحث</b> عنه.</div>
+            <div ng-message="minlength">Your entry is not long enough.</div>
+            <div ng-message="maxlength">Your entry is too long.</div>
+        </div>
+    </md-autocomplete>
+</form>

@@ -1,0 +1,392 @@
+﻿
+<style>
+    .bkgd {
+        background-color: #bebebe;
+    }
+
+    .dashboardWidget, .dashboardWidget-body {
+        width: 100%;
+        min-height: 300px;
+        background-color: #d7d7d7;
+        border-radius: 5px;
+        text-align: center;
+        transition: 800ms ease;
+    }
+
+    .dashboardWidget {
+        margin: 3px auto;
+    }
+
+        .dashboardWidget:hover {
+            box-sizing: border-box;
+            border: 1px solid #999;
+        }
+
+    .dashboardWidget-body {
+        padding: 10px;
+        min-height: 100%;
+        /*line-height:0;   VERY IMPORTANT: this is to prevent height from keeping growing onResize*/
+    }
+
+        .dashboardWidget-body .scroll-custom {
+            height: 40vh;
+        }
+        .dashboardWidget-body .scroll-shadow {
+            box-shadow: inset 0px -2em 3em -1.5em #999;
+        }
+        /*.dashboardWidget-body .scroll-custom:before{
+            position:absolute;
+            content:'';
+            top:88%;bottom:1em;right:1.8em;left:2.3em;
+            box-shadow:inset 0px -2em 3em -1.5em #999;
+        }*/
+        .dashboardWidget-body.expanded .scroll-custom {
+            height: 80%;
+        }
+
+    .chartIconOverlay {
+        line-height: 295px;
+    }
+
+        .chartIconOverlay > .fa {
+            vertical-align: middle;
+            color: #b7bfb7;
+        }
+
+    .dashboardWidget > div:not(.expanded) > button {
+        visibility: hidden;
+        transition: 300ms ease;
+        opacity: .5;
+    }
+
+    .dashboardWidget:hover div > button {
+        visibility: visible;
+        opacity: 1;
+    }
+    .height-232{
+        max-height:232.24px; /*for the data table*/
+    }
+  
+    .expanded {
+        position: fixed;
+        top: 95px;
+        right: 0px;
+        left: 0px;
+        bottom: 0px;
+        margin: auto;
+        background-color: rgba(0,0,0,.7);
+        transition: 800ms ease;
+        z-index: 1000;
+    }
+        .expanded > span {
+            color: #fff;
+            font-size: 2em;
+        }
+        .expanded > button {
+            color: red;
+        }
+        .expanded .height-232 {
+            max-height:100%; /*reset .height-225 in EXPANDED state*/
+        }
+        .expanded table tr th{
+            color:#bbb9b9;
+        }
+        .expanded table tr.dc-table-group:hover td, table tr.dc-table-group:hover td {
+            color: #fff;
+            background-color: rgb(0, 78, 239);
+        }      
+        .expanded table tr.dc-table-row:hover td, table tr.dc-table-row:hover td {
+            color: #222;
+            background-color:rgb(0,174,239);
+        }        
+        .expanded table tr.dc-table-group > td {
+            color: #888;
+            background-color:rgba(0,0,0,.8);
+        }        
+        .expanded table tr.dc-table-row > td {
+            color: #ccc;
+            background-color:rgba(0,0,0,.6);
+        }
+        .expanded .show-on-expanded{
+            display:inline-block;
+        }
+    .show-on-expanded{
+        display:none;
+    }
+    .dc-leaflet {
+        transition: all 300ms;
+    }
+    
+    /*show legend only on EXPANDED mode*/
+    .leaflet-control.legend{
+        display:none;
+    }    
+    .expanded .leaflet-control.legend{
+        display:block;
+    }
+    .leaflet-control.legend{
+        background-color: rgba(0,0,0,.1);
+        padding:2px 17px 2px 2px;
+    }
+    .leaflet-control.legend > i{
+        position:absolute;
+        right:2px;
+        min-width:12px;
+        min-height:12px;
+    }
+    /*STACK CHART*/
+    .dc-chart rect.stack-deselected {
+          opacity: 0.2;
+      }
+    .height-20{height:20px;}
+</style>
+
+<section ng-controller="vizCtrl">
+    <!--<div uib-carousel active="'0'" interval="'5000'" no-wrap="'false'">
+        <div uib-slide ng-repeat="slide in [{key:1,value:'A'},{key:2,value:'B'},{key:3,value:'C'}]" index="$index">
+            <img src="../images/itemNoImageGreen.png" style="margin:auto;" />
+            <div class="carousel-caption">
+                <h4>Slide {{slide.key}}</h4>
+                <p>{{slide.value}}</p>
+            </div>
+        </div>
+    </div>-->
+    <tags-input ng-model="filtersList"
+                key-property="key"
+                display-property="value"
+                on-tag-added="filterTagAdded($tag)"
+                on-tag-removed="filterTagRemoved($tag)"
+                add-from-autocomplete-only="true"
+                placeholder="filters .."
+                template="tag-template"
+                min-length="1">
+        <auto-complete source="filerAutocomplete($query)" min-length="1" template="autocomplete-template"></auto-complete>
+    </tags-input>{{filtersList | json}}
+    <script type="text/ng-template" id="tag-template">
+      <div class="tag-template">
+        <span class="text-muted" ng-bind="data.key"></span>
+        <span ng-bind="$getDisplayText()"></span>
+        <a ng-click="$removeTag()"><i class="fa fa-times-circle"></i></a>
+      </div>
+    </script>
+    <script type="text/ng-template" id="autocomplete-template">
+        <div>
+            <div style="float: left">
+                <i class="fa fa-comments fa-2x gray-light"></i>
+            </div>
+            <div style="float:left; margin-left: 5px">
+                <div><span ng-bind-html="$highlight(data.value)"></span></div>
+                <div style="margin-top: 5px">
+                    <span style="font-size: 14px">{{data.key}}</span>
+                    <span style="font-style: italic; font-size: 11px">37{{data.city}}</span>
+                </div>
+            </div>
+        </div>
+    </script>
+        <div class="row">
+            <div class="col-sm-12 col-md-5 col-lg-4">
+                <h5>Dimensional Charts</h5>
+            </div>
+            <div class="col-sm-9 col-md-5 col-lg-7">
+                <uib-progress>
+                    <uib-bar ng-repeat="bar in stackedBar track by $index"
+                             value="bar.value" type="{{bar.type}}">
+                        <span ng-hide="bar.value < 5">{{bar.value}}%</span>
+                    </uib-bar>
+                </uib-progress>
+            </div>
+            <div class="col-sm-3 col-md-2 col-lg-1">
+                <div class="btn-group" uib-dropdown>
+                    <button id="split-button" type="button" class="btn btn-success"><i class="fa fa-sliders"></i></button>
+                    <button type="button" class="btn btn-success" uib-dropdown-toggle>
+                        <span class="caret"></span>
+                        <span class="sr-only">Split button!</span>
+                    </button>
+                    <ul class="dropdown-menu" uib-dropdown-menu role="menu" aria-labelledby="split-button">
+                        <li role="menuitem"><a href="#"><i class="fa fa-crop"></i>&nbsp;Action 1</a></li>
+                        <li role="menuitem"><a href="#">Action 2</a></li>
+                        <li class="divider"></li>
+                        <li role="menuitem"><a href="#">Action 3</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <button ng-click="readUrlQueryString()">readUrlQueryString</button>
+        <div class="well well-small">{{filters | json}}</div>
+        <div id="visCount" class="dc-data-count">
+            تم إختيار
+            <span class="filter-count"></span> من أصل
+            <span class="total-count"></span>. |
+            <a href="" ng-click="resetFilterAll()" class="reset">reset all</a>
+        </div>
+        <span id="filters" class="alert alert-info" ng-click="resetFilterAll()" style="padding:1px 3px;"></span>
+        <button class="btn-circle"
+                ng-click="toggleContextualMenu(isContextualMenuOpen)"
+                uib-tooltip="لائحة الخيارات"
+                type="button">
+            <i class="fa fa-2x" ng-class="{'fa-angle-down':!isContextualMenuOpen,'fa-angle-up':isContextualMenuOpen}"></i>
+        </button>
+        <div class="row bkgd" id="mainSection">
+            <div ng-cloak
+                 pageslide
+                 ps-open="isContextualMenuOpen"
+                 onclose="onPageSlideClose"
+                 ps-container="mainSection"
+                 ps-side="top"
+                 ps-click-outside="'true'"
+                 ps-key-listener="true">
+                <div class="bg-black" style="padding:5px 20px">
+                    <h2>Horizontal SCROLL</h2>
+                    <p>Put here whatever you want</p>
+                    <a ng-click="toggleContextualMenu(isContextualMenuOpen)" class="button">Close</a>
+                    <!--<div class="list-group">
+                        <div class="list-group-item list-group-item-success list-horizontal"
+                             ng-repeat="r in records">
+                            <h4 class="list-group-item-heading"><i class="fa fa-tag"></i>{{r.key}}</h4>
+                            <p class="list-group-item-text"><i class="fa fa-tag"></i>list-group-item-text</p>
+                            <span class="small">منذ 3 أيام</span>
+                            <span class="small text-muted">منذ 3 أيام</span>
+                        </div>
+                    </div>-->
+
+                    <ul class="nav nav-pills">
+                        <li class="active"
+                            ng-repeat="r in records">
+                            <a href="#">{{r.key}}</a>
+                        </li>
+                    </ul>
+                    <div class="alert alert-info">some charts are featured with OPTIONS for extra dimensions.</div>
+
+                    <!--
+                    <ul rn-carousel class="image" rn-carousel-indicator="true" rn-carousel-controlsr n-carousel-index="'0'">
+                        <li class="height-20"><img src="../images/itemNoImageGreen.png" style="margin:auto;" />slide #1</li>
+                        <li class="height-20"><img src="../images/itemNoImageGreen.png" style="margin:auto;" />slide #2</li>
+                        <li class="height-20"><img src="../images/itemNoImageGreen.png" style="margin:auto;" />slide #3</li>
+                    </ul>
+                    -->
+                    <!--
+                    <ul rn-carousel class="image" rn-carousel-indicator="true" rn-carousel-controls rn-carousel-index="'0'">
+                        <li ng-repeat="r in records" class="height-20">
+                            <img src="../images/itemNoImageGreen.png" style="margin:auto;" />
+                            <div class="layer">{{ r.key }}</div>
+                        </li>
+                    </ul>
+                    -->
+                </div>
+            </div>
+            <!--<div class="col-lg-4 col-md-6 col-sm-12" ng-repeat="chart in charts | orderBy:chart.order">
+                <div  class="dashboardWidget">
+                    <div id="{{chart.id}}"
+                         widget-controls='{"title": "{{chart.title}}", "iconClass":"fa-{{chart.type}}-chart"}'>
+                    </div>
+                </div>
+            </div>-->
+            <div class="col-lg-4 col-md-3 col-sm-12">
+                <div class="dashboardWidget">
+                    <div id="map"
+                         widget-controls="mapInfo">
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-4 col-md-3 col-sm-12">
+                <div class="dashboardWidget">
+                    <div id="mapLeafletChoropleth"
+                         widget-controls="mapLeafletChoroplethInfo">
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-4 col-md-6 col-sm-12">
+                <div class="dashboardWidget">
+                    <div id="bubbleChart"
+                         widget-controls="bubbleChartInfo">
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row bkgd">
+            <div class="col-lg-8 col-md-12 col-sm-12">
+                <div class="row">
+                    <div class="col-lg-12 col-md-12 col-sm-12">
+                        <div class="dashboardWidget" on-size-change="logResize">
+                            <div id="receiptsAmountByMonthBarChart"
+                                 widget-controls="receiptsAmountByMonth">
+                                <select class="form-control show-on-expanded"
+                                        ng-model="dateInterval"
+                                        ng-options="interval.fn as interval.name group by  interval.g disable when interval.disabled for interval in dateIntervals"
+                                        ng-change="onDateIntervalChange()"></select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-lg-6 col-md-6 col-sm-12">
+                        <div class="dashboardWidget">
+                            <div id="mapBubble"
+                                 widget-controls="mapBubbleInfo">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-6 col-md-6 col-sm-12">
+                        <div class="dashboardWidget">
+                            <div>
+                                <!--  <<< dashboardWidget-body-->
+                                <div class="scroll-custom scroll-shadow height-232">
+                                    <table id="visTable" class="table table-hover" widget-controls="visTableConfig"></table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-4 col-md-12 col-sm-12">
+                <div class="dashboardWidget" style="min-height:605.6px;">
+                    <div id="geoChoropleth"
+                         widget-controls="geoChoroplethInfo">
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row bkgd">
+            <div class="col-lg-4 col-md-6 col-sm-12">
+                <div class="dashboardWidget">
+                    <div id="receiptCountByMonthRowChart"
+                         widget-controls="receiptCountByMonthRowChartInfo">
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-4 col-md-6 col-sm-12">
+                <div class="dashboardWidget">
+                    <div id="receiptsAmountByYearPieChart"
+                         widget-controls="receiptsAmountByYear">
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-4 col-md-12 col-sm-12">
+                <div class="dashboardWidget">
+                    <div id="stackChart"
+                         widget-controls="stackChartInfo">
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row bkgd">
+            <div class="col-lg-8 col-md-12 col-sm-12">
+                <div class="dashboardWidget">
+                    <div id="rowStackChart"
+                         widget-controls="rowStackChartInfo">
+                        <select class="form-control show-on-expanded"
+                                ng-model="aggrPattern"
+                                ng-options="aggrPattern.name as aggrPattern.title group by  aggrPattern.g disable when aggrPattern.disabled for aggrPattern in aggrPatterns"
+                                ng-change="onaggrPatternChange()"></select>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-4 col-md-12 col-sm-12">
+                <div class="dashboardWidget">
+                    <div id="amountClassesPieChart"
+                         widget-controls="amountClassesPieChartInfo">
+                    </div>
+                </div>
+            </div>
+        </div>
+</section>

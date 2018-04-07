@@ -1,0 +1,138 @@
+﻿
+[uib-tooltip] .* {
+    position:relative;
+    overflow: visible;
+    z-index:999999;
+}
+.imgHandler{
+    /*position:relative;min-height:300px; width:100%;
+    right:0;
+    left:0;
+    top:0;
+    bottom:0;
+    z-index:2;*/
+}
+.imageEditorSection{height:270px;
+    /*width:100%;
+    height:100%;
+    background-color:rgba(0,0,0,0.4);*/
+        /*z-index:99999;*/
+}
+.border-gray{
+    border: 1px solid #fefefe;
+}
+.imageFrame{
+    position:relative;
+    left:0;
+    width:200px;
+    height: 150px;
+    overflow:hidden; 
+}
+    .overlay{
+    position:absolute;
+    overflow:hidden;
+    bottom:-70px;
+    right:0;
+    left:0;
+    height:70px;
+    background-color:#fff;
+    transition: bottom 200ms ease-in;
+    z-index:3;
+}   
+.overlay .btn-camera,
+.overlay .btn-seletFile,
+.overlay .btn-capture
+{
+    position:absolute;
+    top:10px;
+    transition-delay:150ms;
+    transition-duration:300ms;
+    transition-timing-function:ease;
+    z-index:4;
+}
+.btn-camera
+{
+    right:-100px;
+    transition-property: right;
+}
+.btn-seletFile,
+.overlay .btn-capture
+{   left:-100px;
+    transition-property: left;
+}   
+.imageFrame:hover .overlay{
+    bottom:0px;
+    background-color:rgba(255,255,255,0.2);
+}      
+.imageFrame:hover .overlay .btn-camera
+{
+    right:10px;
+} 
+.imageFrame:hover .overlay .btn-seletFile,
+.imageFrame:hover .overlay .btn-capture
+{   
+    left:10px;
+} 
+.picCaptured{
+    position:absolute;
+    right:0;
+    top: 0;
+}
+[ngf-thumbnail]{
+    width:128px;
+    height:auto;/*128px*/
+}
+.overlayTopTools{
+    position:absolute;
+    top:5px;
+    right:0;
+    left:0;
+    z-index:3;
+}
+    .overlayTopTools .fa-crop{
+        right:5px;
+    }
+    .overlayTopTools .fa-undo{
+        left:5px;
+    }
+
+.cropArea {
+    overflow: hidden;
+    width: 320px;
+    height: 240px;
+    /*background: #F8F8F8;*/
+    /*background-color:transparent;*/
+    /*color: #aaa;*/
+}
+
+.drop-box {
+    height:100%;
+}
+    .drop-box:hover:before{
+        content: "\f0ee";
+        position: absolute;
+        right:70px;
+        font-family:FontAwesome;
+        font-size:4em;
+        text-align: center;
+        line-height: 3em;
+        opacity:.5;
+        color:#ddd;
+    }
+.dragover {
+    border: 2px dashed blue;
+    background-color:#fff;
+}
+    
+.progress {
+    display: inline-block;
+    line-height: 15px;
+    width: 100px;
+    border: 3px groove #CCC;
+}
+
+    .progress div {
+        font-size: smaller;
+        background: orange;
+        width: 0;
+    }

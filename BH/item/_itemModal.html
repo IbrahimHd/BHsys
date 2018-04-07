@@ -1,0 +1,163 @@
+﻿<!--<div class="modal" role="dialog"> THIS HAS DISPLAY:NONE--> <!--The .modal class identifies the content of <div> as a modal and brings focus to it.-->
+    <!--<div class="modal-dialog"> IT COUSES DOUBLE-FRAME--> <!--The .modal-dialog class sets the proper width and margin of the modal.-->
+
+<style>
+    .modal-body{
+        max-height:calc(100vh - 200px);
+        overflow-y:auto;
+    }
+    .img-border{
+        border: 2px solid white;
+    }
+</style>
+<div class="modal-content">
+    <form name="itemFrm" class="form-horizontal" role="form" ng-cloak novalidate> <!--ng-class="{'has-error':itemFrm.$invalid}"-->
+        <div class="modal-header padding-5">
+            <div class="banner">
+                <span class="modal-title text-lg">
+                    <span class="fa fa-cart"></span>{{(ctrl.modalMode==='addMode' && !ctrl.itemSelected.itemName.length) ? ' إضافة صنف جديد': ctrl.itemSelected.itemName}} &nbsp;
+                    <span class="text-muted small" ng-if="ctrl.itemSelected.itemId">({{ctrl.itemSelected.itemId}})</span>
+                </span>
+                <span class="fa-stack fa-lg pull-left"
+                      ng-style="{'color':itemFrm.$invalid ?'#ccc':'#5cb85c'}"
+                      uib-tooltip="الحد الأدنى من البيانات المطلوبة مكتمل">
+                    <i class="fa fa-circle-thin fa-stack-2x"></i>
+                    <i class="fa fa-check fa-stack-1x"></i>
+                </span>                
+                <span class="fa-stack fa-lg pull-left"
+                      ng-style="{'color':itemFrm.$dirty ?'#f0ad4e':'#ccc'}"
+                      uib-tooltip="حصل تعديل للبيانات">
+                    <i class="fa fa-circle-thin fa-stack-2x"></i>
+                    <i class="fa fa-pencil fa-stack-1x"></i>
+                </span>
+            </div>
+        </div>
+        <div class="modal-body bg-gray-soft">
+            <div class="row removeNgtvMrgn">
+                <div class="col-lg-6 col-md-6">
+                    <my-input ng-model="ctrl.itemSelected.itemName"
+                              label="إسم الصنف"
+                              name="itemName"
+                              icon="fa fa-fw fa-tag"
+                              theme="fumi">
+                    </my-input>
+                    <my-input type="text"
+                              ng-model="ctrl.itemSelected.itemCategory"
+                              label="الفئـة"
+                              name="itemCategory"
+                              icon="fa fa-fw fa-tags"
+                              ng-required="true">
+                    </my-input>
+                    <div class="form-group has-feedback" ng-class="{'has-error':(itemFrm.PatientName.$touched && itemFrm.PatientName.$invalid)}">
+                        <label class="control-label">Name</label>
+                        <input type="text" name="PatientName" class="form-control input-lg"
+                               ng-model="ctrl.itemFrm.PatientName"
+                               required
+                               placeholder="Patient Name"
+                               uib-tooltip="Patient Name can not be blank!"
+                               tooltip-enable="itemFrm.$dirty && itemFrm.PatientName.$error.required"
+                               tooltip-is-open="itemFrm.$dirty && itemFrm.PatientName.$error.required && itemFrm.PatientName.$touched" />
+                        <span class="help-block text-danger" ng-if="itemFrm.$dirty && itemFrm.PatientName.$error.required">Required</span>
+                        <span class="fa fa-check form-control-feedback text-success" ng-if="itemFrm.PatientName.$valid"></span>
+                    </div>
+                    <span>{{ctrl.itemSelected.createdAt}}</span><br /><span>{{ctrl.itemSelected.modifiedAt}}</span>
+                    <!--<select class="form-control" ng-model="ctrl.itemSelected.PatientNationality" ng-options="nationalityList.Nationality as nationalityList.Nationality for  nationalityList in ctrl.nationalities" required placeholder="Nationality"></select>-->
+                </div>
+                <div class="col-lg-5 col-md-5 col-md-offset-1">
+                    <img-handler img="ctrl.itemSelected.itemId>0 ? 
+                                 ('../uploads/items/' + ctrl.itemSelected.itemId +'.png' + (ctrl.itemSelected.imgIsChanged ? '?'+ milliseconds : '')) 
+                                 : '../images/itemNoImage.png'" 
+                                 img-name="ctrl.itemSelected.itemId +'.png'"
+                                 on-change="ctrl.itemSelected.imgIsChanged = true"
+                                 show-upload-btn="false"
+                                 api="ctrl.imgHandlerApi"></img-handler>
+                    <my-input ng-model="ctrl.itemSelected.itemPackage"
+                              label="التوضـيب"
+                              name="searchSupplier"
+                              icon="fa fa-fw fa-gift">
+                    </my-input>
+                    <my-input type="text"
+                              ng-model="ctrl.itemSelected.itemPackageDeposit"
+                              label="رهن الفارغ"
+                              name="itemPackageDeposit"
+                              icon="fa fa-fw fa-money"
+                              ng-required="true">
+                    </my-input>
+                    <my-input type="text"
+                              ng-model="ctrl.itemSelected.itemFreight"
+                              label="أجرة النقل"
+                              name="itemFreight"
+                              icon="fa fa-fw fa-truck"
+                              ng-required="true">
+                    </my-input>                
+                    <my-input type="text"
+                              ng-model="ctrl.itemSelected.itemLandingCost"
+                              label="أجرة التحميل"
+                              name="itemLandingCost"
+                              icon="fa fa-fw fa-shopping-basket"
+                              ng-required="true">
+                    </my-input>                  </div>
+            </div>
+
+        </div>
+        <div class="modal-footer">
+            <button class="btn btn-success"
+                    ng-if="ctrl.modalMode==='addMode'"
+                    ng-disabled="itemFrm.$error.required || itemFrm.$error.$invalid"
+                    ng-click="ctrl.addItem(ctrl.itemSelected)">
+                    <i class="fa fa-plus"></i>&nbsp;&nbsp;إضــافة</button>
+            <button class="btn btn-primary"
+                    ng-if="ctrl.modalMode==='editMode'"
+                    ng-disabled="!itemFrm.$dirty"
+                    ng-click="ctrl.saveItem(ctrl.itemSelected)">
+                    <i class="fa fa-check"></i>&nbsp;&nbsp;حــفظ</button>
+            <button class="btn btn-warning"
+                    ng-disabled="!itemFrm.$dirty"
+                    mwl-confirm
+                    title="{{ ctrl.msgConfirmCancel.title }}"
+                    message="{{ ctrl.msgConfirmCancel.message }}"
+                    confirm-text="{{ ctrl.msgConfirmCancel.confirmText }}"
+                    cancel-text="{{ ctrl.msgConfirmCancel.cancelText }}"
+                    placement="{{ ctrl.msgConfirmCancel.placement }}"
+                    on-confirm="ctrl.cancelModal('[User confirmed dismissal of data]_ignorChangesAndExit')"
+                    on-cancel="'noting to do, just keep in place'"
+                    confirm-button-type="danger"
+                    cancel-button-type="default">
+                    إلغاء</button>
+            <button class="btn btn-danger btn-outline"
+                    ng-if="ctrl.modalMode==='editMode'"
+                    mwl-confirm
+                    title="{{ ctrl.msgConfirmRemove.title }}"
+                    message="{{ ctrl.msgConfirmRemove.message }}"
+                    confirm-text="{{ ctrl.msgConfirmRemove.confirmText }}"
+                    cancel-text="{{ ctrl.msgConfirmRemove.cancelText }}"
+                    placement="{{ ctrl.msgConfirmRemove.placement }}"
+                    on-confirm="ctrl.removeItem(ctrl.itemSelected)"
+                    on-cancel="'noting to do, just keep in place'"
+                    confirm-button-type="danger"
+                    cancel-button-type="default"
+                    uib-tooltip="حذف الصنف">
+                    حذف</button>
+                <button class="btn btn-danger"
+                    ng-if="ctrl.modalMode==='editMode' && currentUser.UserRole=='manager' && companyInfo.gblShowPermanentDeleteAuthUsers"
+                    mwl-confirm
+                    title="{{ ctrl.msgConfirmDelete.title }}"
+                    message="{{ ctrl.msgConfirmDelete.message }}"
+                    confirm-text="{{ ctrl.msgConfirmDelete.confirmText }}"
+                    cancel-text="{{ ctrl.msgConfirmDelete.cancelText }}"
+                    placement="{{ ctrl.msgConfirmDelete.placement }}"
+                    on-confirm="ctrl.deleteItem(ctrl.itemSelected)"
+                    on-cancel="'noting to do, just keep in place'"
+                    confirm-button-type="danger"
+                    cancel-button-type="default"
+                    uib-tooltip="حذف الصنف دون إمكانية إسترجاعه لاحقاً">
+                    حذف
+            </button>
+            <button class="btn btn-info"
+                    ng-if="!itemFrm.$dirty" autofocus
+                    ng-click="ctrl.cancelModal('[Nothing changed, just closing the modal]')">
+                    إغلاق</button>            
+            <!--<br /><pre>{{ itemFrm | json }}</pre>-->
+        </div>
+</form>
+</div>

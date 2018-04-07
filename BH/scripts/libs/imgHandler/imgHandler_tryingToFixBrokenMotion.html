@@ -1,0 +1,114 @@
+﻿
+<div class="imgHandler">
+    <div  ng-show="showCamAndCrop" class="imageFrame"></div>
+    <form name="itemFrm" class="form-horizontal" role="form" ng-cloak>
+        <div ng-class="{'modal-backdrop in':showCamAndCrop}"></div>
+        <div ng-class="{'modal':showCamAndCrop}" style="display:block;">
+            <div ng-class="{'modal-dialog modal-content modal-body':showCamAndCrop}">
+                <div ng-class="{'row removeNgtvMrgn imageEditorSection':showCamAndCrop}">
+                    <div ng-class="{'col-md-7':showCamAndCrop}" ng-show="showCamAndCropFrame">
+                        <button class="btn btn-circle"
+                                type="button"
+                                ng-click="closeImgPanel()"
+                                uib-tooltip="إلغاء">
+                            <i class="text-muted fa fa-close"></i>
+                        </button>
+                        <button class="btn btn-circle"
+                                ng-show="showImageCrop===true"
+                                type="button"
+                                ng-click="showImageCrop=false; showWebcam=false"
+                                uib-tooltip="حفظ">
+                            <i class="text-muted fa fa-check"></i>
+                        </button>
+                        <button class="btn btn-circle"
+                                type="button"
+                                ng-click="resetImgModel()"
+                                uib-tooltip="إعادة الأصل">
+                            <i class="text-muted fa fa-undo"></i>
+                        </button>
+                        <button class="btn btn-circle btn-capture"
+                                ng-class="{'btn-success btn-outline':showWebcam}"
+                                type="button"
+                                ng-click="showWebcam? webcam.makeSnapshot() : showWebcam=true;showImageCrop=false;"
+                                uib-tooltip="{{showWebcam? 'إلتقـاط الصورة':'الكميرا'}}">
+                            <i class="fa fa-2x" ng-class="{'fa-camera':!showWebcam,'fa-thumbs-up':showWebcam}"></i>
+                        </button>                        
+                        <div class="" style="position:relative;">
+                            <img-crop ng-show="showImageCrop && imageForCrop!=null && !showWebcam" class="cropArea"
+                                      image="imageForCrop | ngfDataUrl"
+                                      result-image="croppedImageUri"
+                                      result-image-format="'png'"
+                                      result-image-size="200"
+                                      result-image-quality="1.0">
+                            </img-crop>
+                            <div id="webcam" ng-if="showWebcam">
+                                <webcam channel="webcam.channel"
+                                        on-streaming="webcam.onSuccess()"
+                                        on-error="webcam.onError(err)"
+                                        on-stream="webcam.onStream(stream)"></webcam>
+                                <canvas ng-hide="true" id="snapshot" width="200" height="150"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                    <div ng-class="{'col-md-5':showCamAndCropFrame}">
+                        <div class="imageFrame">
+                            <div ng-show="imgModel!=null" class="overlayTopTools">
+                                <button ng-show="!showImageCrop"
+                                        class="btn btn-circle"
+                                        type="button"
+                                        ng-click="sendImageForCrop(imgModel); showWebcam=false; showImageCrop=true;showCamAndCrop=true;showCamAndCropFrame=true;"
+                                        uib-tooltip="قـص الصورة">
+                                    <i class="text-muted fa fa-2x fa-crop"></i>
+                                </button>
+                                <button class="btn btn-circle"
+                                        type="button"
+                                        ng-click="cancelCrop()"
+                                        uib-tooltip="إلغاء القص">
+                                    <i class="text-muted fa fa-2x fa-reply"></i>
+                                </button>
+                            </div>
+                            <div ngf-drop ng-model="imgModel" ngf-pattern="image/*"
+                                    class="drop-box"
+                                    name="imgModelDrop">
+                                <img class="img-circle border-gray"
+                                        ngf-src="imgModel"
+                                        width="150" height="150" />
+                            </div>
+                            <div ng-show="!showImageCrop && !showWebcam" 
+                                 class="overlay">
+                                <button type="button"
+                                        class="btn btn-circle btn-camera"
+                                        ng-click="toggleWebcam();showCamAndCrop=true;showCamAndCropFrame=true;"
+                                        uib-tooltip="الكميرا">
+                                    <i class="fa fa-2x fa-camera"></i>
+                                </button>
+                                <button ng-show="!showWebcam"
+                                        class="btn btn-circle btn-seletFile"
+                                        ngf-select="imageForCrop=null"
+                                        ngf-capture="'camera'"
+                                        ng-model="imgModel"
+                                        accept="image/*"
+                                        name="imgModelSelect"
+                                        uib-tooltip="إختار الصورة">
+                                    <i class="fa fa-2x fa-hand-pointer-o"></i>
+                                </button>
+                            </div>
+                        </div>
+                        <span class="help-block text-danger small" ng-if="itemFrm.imgModelSelect.$error.maxSize || itemFrm.imgModelDrop.$error.maxSize">حجم الصورة أكبر من المقبول. إختر صورة لا تزيد عن 10 ك.ب.</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="modal-footer"
+             ng-if="showUpload">
+            <button class="btn btn-success btn-outline btn-block" ng-click="uploadImg({url:'/api/file?subDirectory=items'})" promise-btn><i class="fa fa-2x fa-send"></i></button>
+            <spin-Kit ng-show="loadingCrop"></spin-Kit>
+            <div class="progress" ng-show="progress > 0">
+                <div style="width:{{progress}}%" ng-bind="progress + '%'"></div>
+            </div>
+            <div class="alert alert-info" ng-show="result && progress > 0">Upload Successful</div>
+            <span class="alert alert-warning" ng-show="errorMsg">{{errorMsg}}</span>
+        </div>
+    </form>
+</div>

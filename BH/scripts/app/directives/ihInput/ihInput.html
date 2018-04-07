@@ -1,0 +1,20 @@
+﻿
+<span class="input input-{{::theme}}">
+    <label class="input_label input_label-{{::theme}}">
+        <i ng-if="icon" class="icon icon-{{::theme}} {{::icon}}"></i>
+        <span class="input_label-content input_label-content-{{:: theme }}">{{:: label }}</span>
+    </label>
+    <input class="input_field input_field-{{:: theme }}"
+           type="{{::type}}"
+           name="{{::name}}"
+           ng-minlength="ngMinlength"
+           ng-maxlength="ngMaxlength"
+           ng-required="ngRequired"
+           ng-pattern="ngPattern"
+           ng-change="ngChange()"
+           ng-trim="ngTrim"
+           ng-model="ngModel"
+           form-name="{{::formName}}"/>
+    <span class="help-block text-danger" ng-if="formName.$dirty && formName.name.$error.required">DirecRequired</span>
+    <!--{{::formName}}{{::formName.$dirty}}:{{::name}}{{::form-name.name.$error.required}}-->
+</span>

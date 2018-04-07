@@ -1,0 +1,13 @@
+﻿<div class="side-form" ng-controller="supplierCtrl">
+    <div class="content">
+        <h2 ng-hide="mode=='add'">{{supplier.supplierName}}</h2>
+        <div class="form-container">
+            <!--<div include-same-scope="supplierDir/supplierNameValidator.html"></div>-->
+            <div include-same-scope="supplierDir/supplierTpl.html"></div>
+            <button class="btn btn-default" ng-click="goBackState()">إلغاء</button>
+            <button class="btn btn-primary" ng-click="addSupplier(supplier)"><i class="fa fa-plus"></i>&nbsp;إضافة</button>
+            <button class="btn btn-primary" ng-click="saveSupplier()"><i class="fa fa-check"></i>&nbsp;حفظ</button>
+        </div>
+    </div>
+    <div class="background"></div>
+</div>

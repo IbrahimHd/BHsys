@@ -1,0 +1,186 @@
+﻿<!--<link href="../supplierDir/suppliers.css?{{now}}" rel="stylesheet" />-->
+ 
+<div class="banner bg-white">
+    <div class="row">
+        <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
+            <span class="text-lg"> لائحة المورّدين</span>
+        </div>
+        <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
+            <div class="btn-group pull-left">
+                <label class="btn btn-primary" ng-model="sortColumn" ng-change="sortData()" uib-btn-radio="'supplierId'" uib-tooltip="ترتيب حسب رقم المورّد" tooltip-append-to-body="true"><i class="fa fa-id-card fa-fw"></i></label>
+                <label ng-show="dataToggle=='supplierProfile'" class="btn btn-primary" ng-model="sortColumn" ng-change="sortData()" uib-btn-radio="'supplieraddress'" uib-tooltip="ترتيب حسب عنوان المورّد" tooltip-append-to-body="true"><i class="fa fa-dollar fa-fw"></i></label>
+                <label class="btn btn-primary" ng-model="sortColumn" ng-change="sortData()" uib-btn-radio="'supplierName'" uib-tooltip="ترتيب حسب إسم المورّد" tooltip-append-to-body="true"><i class="fa fa-tag fa-fw"></i></label>
+            </div>
+            <!--<ih-switch model-name="sortOrder" on-change="sortOrder = !sortOrder" text-if-checked="'&and;'" text-if-unchecked="'&nabla;'"></ih-switch>-->
+            <span class="pretty p-icon p-toggle p-plain p-bigger p-smooth pull-left margin-7">
+                <input type="checkbox"
+                       ng-model="sortOrder"
+                       ng-change="sortData()"
+                       uib-tooltip="ترتيب تصاعدي/تنازلي" tooltip-append-to-body="true"/>
+                <span class="state p-on">
+                    <i class="icon fa fa-sort-amount-desc primary"></i>
+                    <label></label>
+                </span>
+                <span class="state p-off">
+                    <i class="icon fa fa-sort-amount-asc"></i>
+                    <label></label>
+                </span>
+            </span>
+        </div>
+        <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
+            <div class="btn-group pull-left">
+                <label class="btn btn-success" ng-model="viewToggle" uib-btn-radio="'tile'"><i class="fa fa-th-large fa-fw"></i></label>
+                <label class="btn btn-success" ng-model="viewToggle" uib-btn-radio="'grid'"><i class="fa fa-th-list fa-fw"></i></label>
+            </div>
+        </div>    
+        <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
+            <div class="btn-group pull-left">
+                <button role="button" class="btn btn-info" ng-model="dataToggle" uib-btn-radio="'supplierSummary'" ng-change="updateSuppliersDataset()" uib-tooltip="ملخص عمليات الموردين" tooltip-append-to-body="true"><i class="fa fa-id-card-o fa-fw"></i></button>
+                <button role="button" class="btn btn-info" ng-model="dataToggle" uib-btn-radio="'supplierProfile'" ng-change="updateSuppliersDataset()" uib-tooltip="المعلومات الشخصية" tooltip-append-to-body="true"><i class="fa fa-id-badge fa-fw"></i></button>
+            </div>
+            <span class="label-info-outline pull-left" ng-bind="(suppliers.length - 1) || 0"></span>
+        </div>      
+    </div>
+
+    <!--<span class="spacer pull-left"></span>
+
+    <span class="spacer pull-left"></span>-->
+
+</div>
+
+<section class="container-fluid card-group scroll-custom">
+    <div class="row">
+        <spin-Kit ng-show="loading" class="center"></spin-Kit>
+        <!--<div ng-class="viewToggle=='tile' ? 'col-lg-4 col-md-4 col-sm-12' : 'col-lg-6 col-md-6 col-sm-12'"-->
+        <div class="animate"
+             ng-class="viewToggle=='tile' ? 'col-lg-4 col-md-4 col-sm-12': 'col-lg-6 col-md-6 col-sm-12'"
+             ng-repeat="supplier in suppliers track by supplier.supplierId" current-page="pageFrom" total-items="recordCount">
+            <div class="card "
+                 ng-class="viewToggle=='tile' ? 'tile' : 'grid'"
+                 hold-button="onHoldShortStart($event, $promise, supplier.supplierId)" hold-button-delay="150"
+                 ng-style="(selectedSupplierId === supplier.supplierId) ? holdShortStyle : {}">
+                <div ng-if="isLongPressDone && selectedSupplierId === supplier.supplierId"
+                     class="bulb"
+                     ng-class="{'active bg-black-overlay':(isLongPressDone && selectedSupplierId === supplier.supplierId)}">
+                    <div class="bulb-circle btn-circle"><i class="fa fa-phone fa-2x"></i></div>
+                    <div class="bulb-circle btn-circle"><i class="fa fa-tag fa-2x"></i></div>
+                    <div class="bulb-circle btn-circle"><i class="fa fa-gift fa-2x"></i></div>
+                    <div class="bulb-text">Do this!</div>
+                </div>
+                <div class="card-header gray-light">
+                    <i class="menu btn fa fa-ellipsis-v silver"></i>
+                    <div class="pull-left">
+                        <button class="btn-circle btn-sm"
+                                ng-click=""
+                                uib-tooltip="الهاتف"
+                                type="button">
+                            <i class="fa fa-phone"></i>
+                        </button>
+                        <button class="btn-circle btn-sm"
+                                ng-click="suppliers.splice($index, 1)"
+                                uib-tooltip="إخفاء"
+                                type="button">
+                            <i class="fa fa-close"></i>
+                        </button>
+                    </div>
+                </div>
+                <div class="">
+                    <img class="card-photo img-circle" src="../images/avatar.png" width="70" height="70"/>
+                </div>
+                <div class="card-title"><span ng-bind="::supplier.supplierName"></span></div>
+                <div class="card-body gray-light">
+                    <button class="btn-circle btn-sm"
+                            ng-class="viewToggle=='tile' ? '' : 'pull-left'"
+                            ng-click=""
+                            uib-tooltip="تعديل"
+                            type="button">
+                        <i class="fa fa-pencil"></i>
+                    </button>
+                    <span class="pretty p-icon p-tada p-toggle p-plain p-bigger pull-left margin-7">
+                        <input type="checkbox" 
+                               ng-click=""
+                               uib-tooltip="إعجاب"/>
+                        <span class="state p-on">
+                            <i class="icon fa fa-heart primary"></i>
+                            <label></label>
+                        </span>
+                        <span class="state p-off">
+                            <i class="icon fa fa-heart-o"></i>
+                            <label></label>
+                        </span>
+                    </span>
+                    <div class="card-body-main">
+                        <div>مقتطفات متفرقة <i class="fa fa-tag"></i></div>
+                        <ul class="card-body-main-figures gray" ng-if="dataToggle == 'supplierSummary'">
+                            <li uib-tooltip="رصيد المورّد">
+                                <i class="fa fa-dollar"></i>
+                                <span ng-bind="::supplier.receiptsSum || 0"></span>
+                            </li>
+                            <li uib-tooltip="عدد الإستلامات غير المسددة">
+                                <i class="fa fa-newspaper-o"></i>
+                                <span ng-bind="::supplier.receiptsCount"></span>
+                            </li>
+                        </ul>
+                        <ul class="card-body-main-figures gray" ng-if="dataToggle == 'supplierProfile'">
+                            <li uib-tooltip="عنوان المورّد">
+                                <i class="fa fa-map-marker"></i>
+                                <div style="background-color:transparent;"><span ng-bind="::supplier.supplierAddress"></span></div>
+                            </li>
+                            <li uib-tooltip="رقم الهاتف"><i class="fa fa-phone"></i><div style="background-color:transparent;"><span ng-bind="::supplier.supplierPhone"></span></div></li>
+                        </ul>
+                    </div>
+                    <div class="card-body-details gray-light">
+                        <small>بعض التفاصيل الإضافية</small>
+                        <small>
+                            <i class="fa fa-clock-o"></i> <span ng-bind="::supplier.latestReceiptDateRelative"></span>
+                        </small>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div ng-class="viewToggle=='tile' ? 'col-lg-4 col-md-4 col-sm-12': 'col-lg-6 col-md-6 col-sm-12'">
+            <div class="card-add border-dashed border-2x"
+                 ng-class="viewToggle=='tile' ? 'tile' : 'grid'"
+                 ng-click="supplierOpenModal('add','','lg')"
+                 uib-tooltip="إضافة مورّد جديد">
+                <i class="fa fa-plus fa-5x gray-light"></i>
+            </div>
+        </div>
+    </div>
+</section>
+
+<div class="circle">
+    <i class="fa fa-gift fa-4x white" style="position:absolute;"></i>
+</div>
+
+
+<br />
+<div class="list-group">
+    <div class="list-group-item list-group-item-success">
+        <h4 class="list-group-item-heading"><i class="fa fa-tag"></i>list-group-item-heading</h4>
+        <p class="list-group-item-text"><i class="fa fa-tag"></i>list-group-item-text</p>
+        <span class="small">منذ 3 أيام</span>
+        <span class="small text-muted">منذ 3 أيام</span>
+    </div>
+    <button class="btn list-group-item list-group-item-warning" type="button">
+        action
+        <span class="badge badge-warning">33</span>
+    </button>
+    <a href="" class="btn list-group-item list-group-item-warning" type="button">
+        action
+        <span class="badge badge-warning">77</span>
+    </a>
+    <div class="list-group-item">
+        <i class="fa fa-tag"></i>
+    </div>
+</div>
+<div class="list-group">
+    <a href="" class="btn list-group-item list-group-item-warning" type="button">
+        action
+        <span class="badge badge-warning">77</span>
+    </a>
+    <il class="list-group-item">
+        some action
+    </il>
+</div>
+<br /> 

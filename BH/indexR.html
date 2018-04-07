@@ -1,0 +1,158 @@
+﻿<!DOCTYPE html>
+<html lang="ar" dir="rtl" xmlns:ng="http://angularjs.org" ng-app="app">
+<head>
+    <title>Experiments</title>
+    <base href="/" />     <!-- <<<<<<<<<<<<<<<<<  -->
+    <!--META SECTION-->
+    <meta http-equiv="Content-Type" content="text/html" charset="utf-8" /> 
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <!--<link rel="icon" href="favicon.ico" type="image/x-icon"/>-->
+    <link rel="icon" href="favicon.png"  type="image/png"/>
+    <!-- / META SECTION -->
+
+    <!-- CSS INCLUDE -->
+    <link href="css/bootstrap.min.css" rel="stylesheet" type="text/css"/> 
+    <link id="rtl_bs" href="css/bootstrap-rtl.css" rel="stylesheet" type="text/css"/>
+    <link href="fonts/font-awesome.min.css" rel="stylesheet" type="text/css"/>
+    <link href="scripts/libs/toaster/toaster.css" rel="stylesheet" />
+    <!-- / CSS INCLUDE -->
+    <script src="scripts/app/service-worker-register.js"></script>
+</head>
+<body class="bg-gray-light" ng-controller="rootCtrl">
+    <!-- Loader -->
+    <div class="text-center" ng-hide="appLoaded" style="position:fixed;top:0;right:0;left:0;bottom:0;background-color:rgba(255, 255, 255, 0.50); text-align:center;line-height:100vh;z-index:9999;">
+        <span class="fa fa-spinner fa-pulse fa-4x baby-blue"></span>
+    </div>
+    <!-- / Loader -->
+    <toaster-container></toaster-container>
+
+    <div ui-view="main"></div>
+    <div ui-view="modalView" class="view-side-form"></div>
+
+    <script src="scripts/libs/angular/angular.min.js"></script>
+    <script src="scripts/libs/angular/angular-sanitize.min.js"></script>
+    <script src="scripts/libs/angular-animate/angular-animate.min.js"></script>
+    <script src="scripts/libs/angular-aria/angular-aria.min.js"></script>
+    <script src="scripts/libs/angular-ui-route/angular-ui-router.min.js"></script>
+    <!--<script src="scripts/libs/angular-ui-route/ct-ui-router-extras.min.js"></script>--> <!--"Sticky" for Modal dialogs-->
+    <script src="scripts/libs/crypto-js/crypto_BUNDLE.min.js"></script>
+    <script src="scripts/libs/toaster/toaster.js"></script>
+
+    <script type="text/javascript">
+    (function () {
+        'use strict';
+        angular
+            .module('app', [
+            'ngAnimate', //required by ngMaterial
+            'ngAria',//required by ngMaterial
+            //'ngTouch', //Angular Material already has mobile click, tap, and swipe support
+            //'ngMaterial', //required by autoComplete (it uses decarator and cannot Lazy loaded!)
+            'ngSanitize', //needed by ui.bootstrap
+            'ui.router',
+            //'ct.ui.router.extras', // using: "sticky" & "dsr"
+            //'oc.lazyLoad',
+            //'angular-loading-bar',
+            //'angularPromiseButtons',
+            ////'pascalprecht.translate',
+            ////'eehNavigation', //ui-router based Navigation Menu
+            'toaster', //notification module
+            //'ui.bootstrap', //needed for dialog, ui-tooltip-html
+            //'pageslide-directive',
+            ////'xeditable',
+            ])
+            .constant('debugMode', true)
+            .constant('USER_ROLES', {
+                all: '*',
+                manager: 'manager',
+                doctor: 'doctor',
+                registrar: 'registrar'
+            })
+            .constant('AUTH_EVENTS', {
+                loginSuccess: 'auth-login-success',
+                loginFailed: 'auth-login-failed',
+                logoutSuccess: 'auth-logout-success',
+                sessionTimeout: 'auth-session-timeout',
+                notAuthenticated: 'auth-not-authenticated',
+                notAuthorized: 'auth-not-authorized'
+            })
+            .config(routeConfig)
+            .run(function($rootScope) {
+                $rootScope.$on("$stateChangeError", console.log.bind(console));
+            })
+
+            routeConfig.$inject = ['$stateProvider', '$urlRouterProvider', '$locationProvider', '$urlMatcherFactoryProvider', 'USER_ROLES', 'debugMode'];
+        function routeConfig($stateProvider, $urlRouterProvider, $locationProvider, $urlMatcherFactoryProvider, USER_ROLES, debugMode) {
+            var debugThis= false;
+
+            $urlMatcherFactoryProvider.caseInsensitive(true);
+            $locationProvider.html5Mode(true);
+
+            var sitePrefix = '';
+
+            //debugThis && debugMode && $stickyStateProvider.enableDebug(true);
+
+            $stateProvider
+                .state('login', {
+                    url: sitePrefix + "/login",
+                    views: {
+                        "main": {
+                            templateUrl: 'loginDir/login.html'
+                        }
+                    },
+                    //resolve: {
+                    //    loadCtrl: ['$ocLazyLoad', function ($ocLazyLoad) {
+                    //        return $ocLazyLoad.load([
+                    //            'loginDir/loginCtrl.js'
+                    //        ]).then(function () { console.log('loginCtrl File Loaded!'); })
+                    //    }]
+                    //}
+                })
+                .state('experiment', {
+                    url: sitePrefix + '/', //"/experiment",
+                    views: {
+                        "main": {
+                            templateUrl: './experiment.html'
+                        }
+                    }
+                })
+            ;
+            $urlRouterProvider.otherwise(sitePrefix + '/');
+        };
+
+    })();
+    </script>
+    <script src="scripts/app/security/security_ALL.js"></script>
+    <script type="text/javascript" src="scripts/app/dataService.js"></script>
+
+    <script>
+        /// <reference path="../libs/angular/angular.min.js" />
+        /// <reference path="../libs/angular-ui-route/angular-ui-router.min.js" />
+        /// <reference path="../libs/angular-ui-route/ct-ui-router-extras.min.js" />
+
+    (function () {
+        'use strict';
+        angular
+        .module('app')
+        .controller("rootCtrl", rootCtrl);
+
+        rootCtrl.$inject = ['$scope', '$rootScope', '$document', '$timeout', 'dataService', '$state', '$window', 'Auth', 'AUTH_EVENTS', 'USER_ROLES', 'debugMode'];
+        function rootCtrl($scope, $rootScope, $document, $timeout, dataService, $state, $window, Auth, AUTH_EVENTS, USER_ROLES, debugMode) {
+            var debugThis = false;
+            $scope.mapInfo = {
+                'id': 'mapId',
+                'type': 'mapMarker',
+                'chart': {},
+                'title': 'التوزّع الجغرافي',
+                'iconClass': 'fa-map-marker'
+            };
+            $timeout(function () {
+                $scope.appLoaded = true;
+            }, 400);
+        }
+
+    })();
+    </script>
+</body>
+
+</html>

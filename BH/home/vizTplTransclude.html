@@ -1,0 +1,24 @@
+﻿<!--
+    *******
+    ngTransclue removes element "id" which makes [dc] charts not working without ID.
+    *******
+-->
+
+<div class="dashboardWidget">
+    <span class="text-lg">{{chartTitle}}</span>
+    <button class="btn-circle btn-small pull-left"
+            ng-click="toggleChartSize(chart);"
+            uib-tooltip-html="expanded ? 'عرض بحجم أصغر' : 'عرض بحجم أكبر'"
+            tooltip-placement="auto"
+            tooltip-append-to-body="true"
+            type="button">
+        <i ng-class="expanded ? 'fa fa-compress' : 'fa fa-expand'"></i>
+    </button>
+    <div class="reset" style="visibility: hidden;">
+        selected:
+        <span class="filter"></span>
+        <a href="" ng-click="resetChart(chart)">reset</a>
+    </div>
+    <div ng-attr-id="{{chartId}}" ng-transclude ng-class="{'expanded':isExpanded}"><p>replaced by TRANSCLUDE</p></div>
+    <div ng-class="{'hide':!isExpanded}" class="chartIconOverlay"><i class="fa {{iconClass}} fa-5x"></i></div>
+</div>

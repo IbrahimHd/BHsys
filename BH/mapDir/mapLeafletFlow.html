@@ -1,0 +1,114 @@
+﻿<style>
+    #map1 {
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      right: 0;
+      left: 0;
+    }
+    .control-panel {
+      position: absolute;
+      bottom: 0;
+      right: 0;
+      opacity: 0.85;
+      margin-right: 10px;
+      margin-bottom: 25px;
+      z-index: 1000;
+      max-width: 350px;
+      max-height: 515px;
+      overflow-y: auto;
+      border-top: 3px solid #33C3F0;
+      border-bottom: 3px solid #33C3F0;
+      background-color: #f8f8f8;
+    }
+
+    .control-panel h4 {
+      text-align: center;
+      margin-bottom: 1rem;
+    }
+
+    .control-panel p {
+      margin-bottom: .5rem;
+    }
+
+    .control-panel input[type=number] {
+      width: 48%;
+    }
+
+    .control-panel label {
+      font-weight: inherit;
+      margin-bottom: 1rem;
+    }
+
+    .control-panel select {
+      margin-bottom: 1rem;
+    }
+
+    @media (max-width: 550px),
+    (max-height: 550px) {
+      .control-panel {
+        max-height: 200px;
+        margin-right: 0;
+        margin-bottom: 16px;
+      }
+      .control-panel h4 {
+        font-size: 2.4rem !important;
+      }
+    }
+
+    @media (max-width: 550px) {
+      .control-panel {
+        max-width: 100%;
+        width: 100%;
+      }
+    }
+</style>
+
+<div id="map1" > </div >
+<div id="controlPanel" class="control-panel">
+    <div class="container" style="width: 100%; padding: 5px 10px;">
+        <h4>Canvas Flowmap Layer</h4>
+        <p>
+            Explore <strong>origin-to-destination</strong> layers with different relationships:
+        </p>
+        <button id="oneToManyLayerButton" class="btn btn-primary u-full-width" value="0">One-to-Many</button>
+        <button id="manyToOneLayerButton" class="btn u-full-width" value="1">Many-to-One</button>
+        <button id="oneToOneLayerButton" class="btn u-full-width" value="2">One-to-One</button>
+        <p>
+            Change animation properties:
+        </p>
+        <div class="row">
+            <div class="col-md-6">
+                <button id="pathAnimationButton" class="btn btn-block">Pause</button>
+            </div>
+            <div class="col-md-6">
+                <select id="pathAnimationStyleSelect" class="u-full-width"></select>
+            </div>
+        </div>
+        <label>
+            <input id="pathAnimationDurationInput" type="number" min="500" step="100" max="15000" value="2000" />
+            duration (ms)
+        </label>
+        <p>
+            Change user interaction and path selection properties:
+        </p>
+        <div class="row">
+            <div class="col-md-6">
+                <select id="userInteractionSelect" class="u-full-width">
+                    <option value="click" selected>Click</option>
+                    <option value="mouseover">Mouseover</option>
+                </select>
+            </div>
+            <div class="col-md-6">
+                <select id="pathSelectionTypeSelect" class="u-full-width">
+                    <option value="SELECTION_NEW" selected>New</option>
+                    <option value="SELECTION_ADD">Add</option>
+                    <option value="SELECTION_SUBTRACT">Subtract</option>
+                </select>
+            </div>
+        </div>
+    </div>
+</div>
+<br />
+
+

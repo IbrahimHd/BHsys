@@ -1,0 +1,47 @@
+﻿<div class="panel panel-info" style="margin:5px;">
+    <div class="panel-heading">
+        <div class="panel-title">
+            <i class="fa fa-leaf text-success"></i>&nbsp;لائحة الأصناف
+            <button class="btn btn-outline" ng-click="openModalItem('addMode','','lg')" uib-tooltip="إضافة صنف جديد"><i class="fa fa-2x fa-shopping-bag"></i></button>
+        </div>
+    </div>
+    <div class="panel-body padding-1" style="height:380px; overflow:hidden;">
+        <div class="searchBox">
+            <input type="search" class="form-control" ng-model="searchItemsInput" ng-change="searchItems(searchItemsInput)" placeholder="إبحث عن باقي الأصناف هنا"/>
+            <i class="fa fa-search"></i>
+            <i ng-if="searchingItems" class="fa fa-spinner fa-pulse"></i>
+        </div>
+        <div as-sortable="" ng-model="itemsPerparedForReceipt" class="list-group scroll-custom" style="max-height:400px;">
+            <div as-sortable-item
+                 ng-repeat="item in itemsPerparedForReceipt track by item.itemId"
+                 class="list-group-item padding-5 animate">
+                <div as-sortable-item-handle>
+                    <img class="img-circle" ng-src="{{'../../uploads/items/' + item.itemId +'.png'+ (item.updateImg ? ('?'+ milliseconds) : '')}}" onerror="javascript: this.src = '../../images/itemNoImage.png'" width="40" height="40"/>
+                    <i class="fa fa-{{item.itemCategory}} {{item.itemCategory}}"></i>
+                    &nbsp;{{item.itemName}}
+                    &nbsp;<span class="text-muted">{{item.itemPackage}}</span>
+                    &nbsp;<small class="label-underline" 
+                                 uib-tooltip-html="'آخر سعر (<span ng-bind=\'item.modifiedAt\'></span>) <i class=\'fa fa-calendar\'></i>'"
+                                 tooltip-append-to-body="true"
+                                 style="cursor:help">1,250</small>
+                    <div class="item-hover">
+                        <i class="fa fa-question-circle-o text-muted pull-left"
+                           uib-tooltip-html="'بعض المعلومات الإضافية </br><i class=\'fa fa-info-circle text-info\'></i> المزيد'"
+                           tooltip-placement="right" tooltip-append-to-body="true"
+                           style="cursor:help"></i>
+                        <a class="pull-left" ng-click="openModalItem('editMode',item.itemId,'lg')" uib-tooltip="تعديل الصنف" tooltip-append-to-body="true" ng-class="{disabledLink: !isAuthorized}">
+                        <i class="fa fa-pencil"></i></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div ng-if="searchItemsInput.length > 0 && itemsPerparedForReceipt.length < 1 && !searchingItems"
+             class="animate">
+            <span>لم يتم العثور على <b>{{searchItemsInput}}</b>.</span>
+            <button class="btn btn-block btn-success" ng-click="openModalItem('addMode','','lg')">صنف جديد</button>
+        </div>    
+    </div>
+    <div class="panel-footer">
+        <sapn>{{itemsPerparedForReceipt.length}}</sapn>
+    </div>
+</div>

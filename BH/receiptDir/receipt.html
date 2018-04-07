@@ -1,0 +1,207 @@
+﻿<div class="banner bg-white">
+    <span class="text-lg">إستلام البضائع</span>
+    <a class="btn btn-primary btn-outline pull-left" ui-sref="layout.supplier"><i class="fa fa-plus"></i>&nbsp;مورّد جديد</a>
+    <a class="btn btn-primary btn-outline pull-left"
+       ui-sref="modalView({ htmlUrl:'supplierDir/supplier.html', ctrlUrl:'supplierDir/supplierCtrl.js', ctrlName:'supplierCtrl', dataLoad:receipt.supplierId, mode:'add'})"><i class="fa fa-plus"></i>&nbsp;modalView</a>
+    <a class="btn btn-primary btn-outline pull-left" ui-sref="layout.receipts"><i class="fa fa-list-alt"></i>&nbsp;لائحة الإســتلام</a>
+</div>
+
+<div ng-if="!!isSearchSupplierOpen" include-same-scope="supplierDir/searchSupplier.html"></div>
+
+<div> <!--ng-show="receipt.supplierId"-->
+    <div class="row removeNgtvMrgn" style="min-height:450px;">
+        <div ng-show="isSideItemsMenuOpen" class="padding-1" ng-class="{'col-md-3':isSideItemsMenuOpen}">
+            <div include-same-scope="item/itemsList.html"></div>
+        </div>
+        <div class="padding-1" ng-class="isSideItemsMenuOpen ? 'col-md-9' : 'col-md-12'">
+            <div class="panel panel-primary" style="margin:5px;">
+                <div class="panel-heading">
+                    <div class="panel-title">
+                        <button class="btn btn-outline" ng-click="isSideItemsMenuOpen=!isSideItemsMenuOpen">
+                            <i ng-class="{'fa fa-2x':true,'fa-cart-plus':!isSideItemsMenuOpen,'fa-angle-right':isSideItemsMenuOpen}"></i>
+                        </button>
+                        <i class="fa fa-2x fa-shopping-cart"></i>&nbsp;
+                        <a ng-click="supplierOpenModal('edit',supplierData(),'lg')">{{receipt.supplierName}}</a>&nbsp;                        
+                        <a uib-popover-html="'<div class=&quot;gray-light&quot;><i class=&quot;fa fa-5x fa-pie-chart&quot;></i></div>'"
+                           popover-title="At A Glance" 
+                           popover-trigger="'mouseenter'"
+                           popover-placement="auto top"
+                           popover-popup-delay=""><i class="fa fa-pie-chart"></i></a>&nbsp;
+                        <button class="btn btn-outline" ng-click="isSearchSupplierOpen=!isSearchSupplierOpen"><i class="fa fa-random"></i></button>
+                        <a editable-bsdate="receipt.receiptDate"
+                           e-is-open="isOpenReceiptDate"
+                           e-ng-click="isOpenReceiptDate=!isOpenReceiptDate"
+                           e-datepicker-popup="yyyy/MM/dd"
+                           e-name="receiptDate"
+                           onshow="xeditableReceiptDateOnShow(true)"
+                           onhide="xeditableReceiptDateOnShow(false)"
+                           class="silver">
+                            {{ (receipt.receiptDate | date:"yyyy/MM/dd") || 'تاريخ الإستلام' }}
+                        </a>
+                        <div class="btn-group pull-left"
+                             ng-show="!isOpenReceiptDate">
+                            <button ng-disabled="receipt.ReceiptItems.length<1"
+                                    ng-click="saveReceipt(receipt)"
+                                    promise-btn
+                                    class="btn btn-success"> حفظ
+                            </button>
+                            <i class="btn"
+                                ui-sref="modalView({ htmlUrl: 'receiptDir/receiptPrint.html', ctrlUrl: 'receiptDir/receiptPrintCtrl.js', ctrlName: 'receiptPrintCtrl', dataLoad: receipt , mode: 'read' })"
+                                uib-tooltip="طباعة" role="button"><i class="fa fa-print fa-2x"></i></i>
+                            <i class="btn"
+                               ng-class="{'fa fa-angle-down':isReceiptItemsCollapse,'fa fa-angle-up':!isReceiptItemsCollapse}"
+                               ng-click="isReceiptItemsCollapse=!isReceiptItemsCollapse">
+                            </i>
+                            <span class="badge">{{receipt.ReceiptItems.length}}</span>
+                            <i ui-sref="sort"><i class="btn fa fa-sort"></i></i>
+                        </div>
+                    </div>
+                </div>
+                <div class="panel-body" style="padding:0px;" uib-collapse="isReceiptItemsCollapse">
+                    <table class="table table-hover table-condensed table-responsive">
+                        <colgroup><col /></colgroup>
+                        <thead>
+                            <tr class="text-right">
+                                <th width="20%" class="text-right">الصـــنف</th>
+                                <th width="10%" class="text-right">التوضيب</th>
+                                <td width="7%" class="text-right">فارغ</td>
+                                <td width="8%" class="text-right">رهن</td>
+                                <td width="8%" class="text-right">عتالة</td>   
+                                <td width="7%" class="text-right">نقل</td>                             
+                                <th width="10%" class="text-right">الكـمية</th>
+                                <th width="15%" class="text-right">الـسعر</th>
+                                <th width="15%" class="text-right">الإجـمالي</th>
+                            </tr>
+                        </thead>
+                        <tbody as-sortable="dragControlListeners" ng-model="receipt.ReceiptItems">
+                            <tr ng-if="itemAlreadyExist.status">
+                                <td colspan="9" width="100%" height="30px">
+                                    <div class="alert alert-danger" ng-click="itemAlreadyExist.status=false;itemAlreadyExist.item={}">الصنف <b>{{itemAlreadyExist.item.itemName}}</b> موجود مسبقاً</div></td>
+                            </tr> 
+                            <tr as-sortable-item 
+                                ng-if="receipt.ReceiptItems.length<1">
+                                <td colspan="9" width="100%"></td>
+                            </tr>                            
+                            <!--ng-style="{'background-image': model.selected === receiptItem ? holdShortStyle : 'inherit'}"-->
+                            <!--ng-style="(model.selected === receiptItem) ? holdShortStyle : {}"-->
+                            <tr class="animate"
+                                ng-repeat="receiptItem in receipt.ReceiptItems track by receiptItem.itemId"
+                                as-sortable-item
+                                hold-button="onHoldShortStart($event, $promise, receiptItem.itemId)" hold-button-delay="150"
+                                ng-style="(selectedItemId === receiptItem.itemId) ? holdShortStyle : {}"
+                                ng-class="{'warning-flash':itemAlreadyExist.status===true && receiptItem.itemId === itemAlreadyExist.item.itemId}"
+                                uib-tooltip="الصنف موجود مسبقاً"
+                                tooltip-enable="itemAlreadyExist.status"
+                                tooltip-is-open="itemAlreadyExist.status && receiptItem.itemId===itemAlreadyExist.item.itemId">
+                                <td><span as-sortable-item-handle class="as-sortable-item-handle-btn">::</span>{{receiptItem.itemName}}</td>
+                                <td><select class="form-control"
+                                            ng-model="receiptItem.itemPackage"
+                                            ng-change="receiptItem.changed=isItemJustAdded(receiptItem.createdAt)"
+                                            ng-options="pkgType as pkgType for  pkgType in packageTypes"
+                                            required
+                                            placeholder="التوضيب"></select></td>
+                                <td><input type="number"
+                                           ng-model="receiptItem.itemPackageCount" 
+                                           ng-change="receiptItem.changed=isItemJustAdded(receiptItem.createdAt);updateTotal()"
+                                           min="0" 
+                                           step="1" 
+                                           class="form-control input-sm" /></td>
+                                <td>
+                                    <input type="number"
+                                           ng-model="receiptItem.itemPackageDeposit"
+                                           ng-change="receiptItem.changed=isItemJustAdded(receiptItem.createdAt);updateTotal()"
+                                           min="0"
+                                           step="50"
+                                           class="form-control input-sm" />
+                                </td>
+                                <td><input type="text" input-format
+                                           ng-model="receiptItem.itemLandingCost"
+                                           ng-change="receiptItem.changed=isItemJustAdded(receiptItem.createdAt);updateTotal()"
+                                           min="1"
+                                           step="50"
+                                           class="form-control input-sm" /></td>
+                                <td>
+                                    <input type="text" input-format
+                                           ng-model="receiptItem.itemFreight"
+                                           ng-change="receiptItem.changed=isItemJustAdded(receiptItem.createdAt);updateTotal()"
+                                           min="1"
+                                           step="50"
+                                           class="form-control input-sm" />
+                                </td>
+                                <td><input type="number" 
+                                           ng-model="receiptItem.itemQnty" 
+                                           ng-change="receiptItem.changed=isItemJustAdded(receiptItem.createdAt);updateTotal()" 
+                                           min="1" 
+                                           class="form-control input-sm border-info"
+                                           set-focus="isFocused"></td>
+                                <td><input type="text" input-format
+                                           ng-model="receiptItem.itemCost" 
+                                           ng-change="receiptItem.changed=isItemJustAdded(receiptItem.createdAt);updateTotal()"
+                                           min="1" 
+                                           step="1000" 
+                                           class="form-control input-sm border-info" /></td>
+                                <td ng-class="{'bg-gray-soft':selectedItemId !== receiptItem.itemId && receiptItem.itemId != itemAlreadyExist.item.itemId}">
+                                    <div ng-bind="receiptItem.total"
+                                         ng-hide="isShortActionDone && selectedItemId === receiptItem.itemId"></div>
+                                    <div ng-show="isShortActionDone && selectedItemId === receiptItem.itemId">
+                                        <div ng-show="receipt.ReceiptItems.length === 1" class="alert alert-warning"> الحذف غير ممكن. .يجب أن يحتوي الإيصال أقلّه على صنف واحد</div>
+                                        <div ng-show="receipt.ReceiptItems.length > 1">
+                                            <button class="btn-circle btn-sm bg-white"
+                                                    uib-tooltip="حذف الصنف"
+                                                    mwl-confirm
+                                                    title="{{ msgConfirmRemove.title }}"
+                                                    message="{{ msgConfirmRemove.message }}"
+                                                    confirm-text="{{ msgConfirmRemove.confirmText }}"
+                                                    cancel-text="{{ msgConfirmRemove.cancelText }}"
+                                                    placement="{{ msgConfirmRemove.placement }}"
+                                                    on-confirm="removeReceiptItem(receiptItem)"
+                                                    on-cancel="'noting to do, just keep in place'"
+                                                    confirm-button-type="danger"
+                                                    cancel-button-type="default"
+                                                    type="button">
+                                                <i class="fa fa-trash-o text-danger"></i>
+                                            </button>
+                                            <button class="btn-circle btn-sm btn-danger"
+                                                    ng-if="currentUser.UserRole=='manager'"
+                                                    uib-tooltip="حذف الصنف دون إمكانية إسترجاعه لاحقاً"
+                                                    mwl-confirm
+                                                    title="{{ msgConfirmDelete.title }}"
+                                                    message="{{ msgConfirmDelete.message }}"
+                                                    confirm-text="{{ msgConfirmDelete.confirmText }}"
+                                                    cancel-text="{{ msgConfirmDelete.cancelText }}"
+                                                    placement="{{ msgConfirmDelete.placement }}"
+                                                    on-confirm="deleteReceiptItem(receiptItem)"
+                                                    on-cancel="'noting to do, just keep in place'"
+                                                    confirm-button-type="danger"
+                                                    cancel-button-type="default"
+                                                    type="button">
+                                                <i class="fa fa-trash-o"></i>
+                                            </button>
+                                            <button class="btn-circle btn-sm bg-white"
+                                                    uib-tooltip="إغلاق"
+                                                    ng-click="isShortActionDone=false"
+                                                    type="button">
+                                                <i class="fa fa-close text-muted"></i>
+                                            </button>
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                        <tfoot>
+                            <tr>
+                                <th colspan="8">الإجمالي</th>
+                                <th ng-class="{'text-muted small':false}">{{receipt.total || 'المبالغ غير مكتملة بعد'}}</th>
+                            </tr>
+                        </tfoot>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!--<pre class="code" dir="rtl">{{modelAsJson}}</pre>-->
+<!--
+<i class="fa fa-cart-arrow-down"></i><i class="fa fa-cart-plus"></i>
+<i class="fa fa-shopping-bag"></i><i class="fa fa-shopping-basket"></i>
+<i class="fa fa-list-alt"></i><i class="fa fa-id-card-o"></i>-->

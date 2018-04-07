@@ -1,0 +1,29 @@
+{
+  "name": "bhSys",
+  "description": "BH System",
+  "author": "Ibrahim HAMMAD <hammadibrahim@hotmail.com>",
+  "licenses": [
+    {
+      "type": "MIT",
+      "url": "http://revolunet.mit-license.org"
+    }
+  ],
+  "dependencies": {
+    "devextreme": "17.2.7",
+    "jquery": "^3.3.1",
+    "ui-router": "1.0.15"
+  },
+  "devDependencies": {
+    "browser-sync": "~2.23.6",
+    "bs-html-injector": "3.0.3",
+    "uglify-js": "3.3.8",
+    "webpack": "^3.10.0"
+  },
+  "scripts": {
+    "uglifyJs": "node uglifyjs myfile.js -o output.min.js",
+    "uglifyJs-browser": "uglifyjs --self -c -m -o /tmp/uglifyjs.js",
+    "buildWithNoDevServer": "webpack scr/js/app.js dist/bundle.js",
+    "build": "webpack --entry ./scr/js/app.js --output-filename ./dist/bundle.js",
+    "build:prod": "webpack scr/js/app.js dist/bundle.min.js -p"
+  }
+}

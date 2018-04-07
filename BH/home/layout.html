@@ -1,0 +1,154 @@
+﻿<div ng-cloak>
+    <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation" ng-cloak>
+        <!--<div class="container-fluid">-->
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" ng-click="isNavCollapsed = !isNavCollapsed">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <button type="button" class="btn-transparent outline-off" ng-click="isSidebarOpen=!isSidebarOpen">
+                <i ng-class="{'fa fa-2x':true,'fa-angle-left':!isSidebarOpen,'fa-angle-right':isSidebarOpen}"></i>
+            </button>
+            <a class="navbar-brand" href="#">
+                <img class="img-circle" src="../images/itemNoImageGreen.png" width="35" style="display:inline-block; margin-top:-8px;" />
+                روّاد الأعمال
+            </a>
+        </div>
+        <div class="collapse navbar-collapse scroll-custom" uib-collapse="isNavCollapsed">
+            <form class="navbar-form"
+                  ng-class="{'navbar-left':isNavCollapsed,'navbar-right':!isNavCollapsed}">
+                <div class="form-group position-relative">
+                    <input type="text" class="form-control control-circled bg-blueNight" placeholder="Search">
+                    <button type="submit" class="btn btn-circle btn-md btn-embeded"><i class="fa fa-search"></i></button>
+                </div>
+            </form>            
+            <ul class="nav navbar-nav">
+                <li class="dropdown hidden-xs hidden-sm hidden-md" uib-dropdown>
+                    <div class="navbar-btn btn-group">
+                        <button id="split-button" type="button" class="btn btn-success">Action</button>
+                        <button type="button" class="btn btn-success dropdown-toggle" uib-dropdown-toggle>
+                            <span class="caret"></span>
+                            <span class="sr-only">Split button!</span>
+                        </button>
+                    </div>
+                    <ul class="dropdown-menu" role="menu" aria-labelledby="split-button">
+                        <li role="menuitem"><a ui-sref="layout.landing" ng-click="isNavCollapsed = true"><i class="fa fa-crop"></i>&nbsp;<span>خطوة أولى</span></a></li>
+                        <li role="menuitem"><a ui-sref="layout.landing" ng-click="isNavCollapsed = true">Another action</a></li>
+                        <li class="divider"></li>
+                        <li role="menuitem"><a ui-sref="layout.landing" ng-click="isNavCollapsed = true">Separated link</a></li>
+                    </ul>
+                </li>
+                <li>
+                    <a ng-click="docDirOnChange()"
+                       uib-tooltip="إتجاه الصفحة"
+                       tooltip-placement="bottom" >
+                       <i ng-class="isDocDirRtl ? 'fa fa-eye fa-2x baby-blue' : 'fa fa-eye-slash fa-2x'"></i>
+                    </a>
+                </li>
+                <li class="hidden-xs hidden-sm hidden-md"><a><i class="baby-blue fa fa-2x fa-sliders"></i></a></li>
+                <li>
+                    <a>
+                        <span class="fa-stack fa-lg">
+                            <i class="fa fa-3x fa-circle-thin faa-burst animated fa-stack-2x text-warning"></i>
+                            <i class="fa fa-comments-o fa-stack-1x"></i>
+                        </span>
+                    </a>
+                    <!--<a class="btn-pulsate" ng-click="">
+                        <span class="pulsating"></span>
+                        <i class="fa fa-2x fa-comments-o"></i>
+                        <span class="badge">7</span>
+                    </a>-->
+                </li>
+                <li><a ui-sref="layout.landing" ng-click="isNavCollapsed = true">Home</a></li>
+                <li class="dropdown" uib-dropdown>
+                    <a class="dropdown-toggle" uib-dropdown-toggle>
+                        <i class="fa fa-cogs"></i> Admin
+                        <span class="caret"></span>
+                    </a>
+                    <ul class="dropdown-menu" role="menu">
+                        <li><a ui-sref="training" ng-click='isNavCollapsed = true'><i class="fa fa-briefcase"></i>&nbsp;<span>التدريب</span></a></li>
+                    </ul>
+                </li>
+            </ul>
+            <ul class="nav navbar-nav navbar-left">
+                <li class="dropdown" uib-dropdown>
+                    <a class="" uib-dropdown-toggle>
+                        <img class="img-circle" src="../images/avatar.png" width="38" />
+                    </a>
+                    <ul class="dropdown-menu" role="menu">
+                        <li role="menuitem"><a href="#"><i class="fa fa-search"></i>&nbsp;<span>خطوة أولى</span></a></li>
+                        <li role="menuitem"><a href="#">Another action</a></li>
+                        <li class="divider"></li>
+                        <li role="menuitem"><a href="#">Separated link</a></li>
+                    </ul>
+                </li>
+            </ul>
+        </div>
+        <!--</div>-->
+    </nav>
+    <div pageslide
+         ps-open="isSidebarOpen"
+         ps-container="appBelowNavbar"
+         onclose="onPageSlideClose"
+         ps-auto-close="true"
+         ps-click-outside="'true'"
+         ps-key-listener="true"
+         ps-class="bg-black sidebar-wrapper"
+         ps-zindex="1002"
+         ng-cloak>
+        <!--ps-size="{{sidebar.width}}"-->
+        <!-- ps-push="true" << dose NOT work with "ps-container" -->
+        <!-- ps-body-class="adds a class on the container body" -->
+        <h2>Navigate</h2>
+        <p>
+            <span class="text-muted"> Pick whatever you want to do!</span>
+        </p>
+        <div class="scroll-custom" style="height:500px;">
+            <ul class="nav sidebar">
+                <li ng-repeat="nav in ::navList track by nav.state">
+                    <a ng-class="{'btn-danger':nav.state=='logout'}"
+                       ng-click="nav.hasChildren && (nav.isCollapsed = !nav.isCollapsed)"
+                       ng-attr-ui-sref="{{!nav.hasChildren && nav.state}}" ng-attr-ui-sref-active-eq="active"
+                       uib-tooltip="{{nav.options.title}}" tooltip-append-to-body="true" tooltip-class="tooltipHideOnSmallScreen">
+                        <i class="fa {{nav.options.iconCls}}"></i>
+                        <span>{{nav.options.title}}</span>
+                        <i ng-if="nav.hasChildren"
+                           class="fa"
+                           ng-class="nav.isCollapsed ? 'fa-angle-down' : 'fa-angle-up'"></i>
+                    </a>
+                    <ul ng-if="nav.hasChildren"
+                        class="nav"
+                        uib-collapse="nav.isCollapsed" role="menu">
+                        <li ng-repeat="childState in nav.children" role="menuitem">
+                            <a ui-sref="{{childState.state}}" ui-sref-active-eq="active"
+                                uib-tooltip="{{childState.options.title}}" tooltip-append-to-body="true" tooltip-class="tooltipHideOnSmallScreen">
+                                <i class="fa {{childState.options.iconCls}}"></i>
+                                <span>{{childState.options.title}}</span>
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+                <li class="foot-note">
+                    <small class="text-muted">A note goes here.</small>
+                </li>
+            </ul>
+        </div>
+    </div>
+    <div id="appBelowNavbar" class="height-full-canvas padding-5">
+        <div class="height-full-content scroll-custom">
+            <div ng-show="isSidebarOpen" style="position:absolute;top:0px;right:1px;left:0;bottom:0;background-color:rgba(255, 255, 255, 0.50);z-index:1001;">
+            </div>
+            <div ui-view="content" class="ui-view-slide"></div>
+        </div>
+        <div float-menu ng-cloak></div>
+        <footer ng-cloak>
+            <p>&copy; {{currentYear}} - <b>BH</b>Sys</p>
+            <div ng-show="!currentUser.pref_autorefreshEnabled" class="alert alert-danger" style="position:fixed;bottom:1px; width:490px;height:30px;padding:5px;left:35%;">
+                Records are not being refreshed! <small class="text-muted">Last Server Update: <b>{{lastServerRefreshTime}}</b>.<a class="alert-link" ui-sref="modalView"> Enable Refresh</a></small>
+            </div>
+        </footer>
+    </div>
+</div>

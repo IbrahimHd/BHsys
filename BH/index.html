@@ -1,0 +1,117 @@
+﻿<!DOCTYPE html>
+<html lang="ar" dir="rtl" xmlns:ng="http://angularjs.org" ng-app="app">
+<head>
+    <title>BH</title>
+    <base href="/" />     <!-- <<<<<<<<<<<<<<<<<  -->
+    <!--META SECTION-->
+    <meta http-equiv="Content-Type" content="text/html" charset="utf-8" /> 
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <!--<link rel="icon" href="favicon.ico" type="image/x-icon"/>-->
+    <link rel="icon" href="favicon.png"  type="image/png"/>
+    <!-- / META SECTION -->
+
+    <!-- CSS INCLUDE -->
+    <link href="css/bootstrap.min.css" rel="stylesheet" type="text/css"/> 
+    <link id="rtl_bs" href="css/bootstrap-rtl.css" rel="stylesheet" type="text/css"/>
+    <!--<link href="scripts/libs/perfect-scroll/perfect-scrollbar.css" rel="stylesheet" />-->
+    <link href="scripts/libs/angular-material/angular-material.min.css" rel="stylesheet" type="text/css"/>
+    <link href="fonts/font-awesome.min.css" rel="stylesheet" type="text/css"/>
+    <link href="fonts/font-awesome-animation.min.css" rel="stylesheet" type="text/css"/>
+    <link href="scripts/app/directives/ihInput/ihInput.css" rel="stylesheet" type="text/css"/>
+    <link href="common/switch/switch.css" rel="stylesheet" type="text/css"/>
+    <link href="scripts/libs/loading-bar/loading-bar.min.css" rel="stylesheet" type="text/css"/>
+    <link href="common/spinKit/spinKit.css" rel="stylesheet" type="text/css"/>
+    <link href="scripts/libs/toaster/toaster.css" rel="stylesheet" />
+    <link href="css/style.css" rel="stylesheet" type="text/css"/>
+    <link href="css/ui-router_smooth-swape.css" rel="stylesheet" />
+    <link href="css/ui-router_sideMenu-like_animation.css" rel="stylesheet" type="text/css"/>
+    <!--<link href="css/ui-router_ui-view-slide.css" rel="stylesheet" type="text/css"/>-->
+    <!-- / CSS INCLUDE -->
+    <script src="scripts/app/service-worker-register.js"></script>
+</head>
+<body class="bg-gray-light" ng-controller="rootCtrl">
+    <!-- Loader -->
+    <div class="text-center" ng-hide="appLoaded" style="position:fixed;top:0;right:0;left:0;bottom:0;background-color:rgba(255, 255, 255, 0.50); text-align:center;line-height:100vh;z-index:9999;">
+        <span class="fa fa-spinner fa-pulse fa-4x baby-blue"></span>
+    </div>
+    <!-- / Loader -->
+    
+    <script type="text/ng-template" id="toasterTpl.html">
+        <div ng-init="isCollapse=true">
+            <p>{{toaster.data.message}}</p>
+            <a class="text-muted small" ng-click="isCollapse=!isCollapse">التفاصيل <i ng-class="{'fa fa-angle-down':isCollapse,'fa fa-angle-up':!isCollapse}"></i></a>
+            <div class="" uib-collapse="isCollapse" dir="ltr">
+                <small class=""> {{toaster.data.details}} </small>
+            </div>
+        </div>
+    </script>
+    <toaster-container toaster-options="{'toaster-id': 1, 'time-out':{ 'toast-success': 5000, 'toast-info': 5000,'toast-warning': 7000, 'toast-error': 0 } , 'close-button':true, 'tap-to-dismiss': true, 'animation-class': 'toast-top-center','position-class': 'toast-top-right',
+                       'body-output-type':'templateWithData',
+                       'body-template':{'template':'toasterTpl.html', 
+                                        'data':{'message':'thisIsMyMsg'
+                                                }
+                                        }
+                       }"></toaster-container>
+    <toaster-container toaster-options="{'toaster-id': 2}"></toaster-container>
+    
+    <!--<toaster-container toaster-options="{'time-out':{ 'toast-success': 5000, 'toast-info': 5000,'toast-warning': 0, 'toast-error': 0 } , 'close-button':true, 'tap-to-dismiss': true, 'animation-class': 'toast-top-center','position-class': 'toast-top-right'}"></toaster-container>-->
+    
+    <div ui-view="main"></div>
+    <div ui-view="modalView" class="view-side-form"></div>
+
+    <script src="scripts/libs/angular/angular.min.js"></script>
+    <script src="scripts/libs/angular/angular-sanitize.min.js"></script>
+    <script src="scripts/libs/angular/angular-animate/angular-animate.min.js"></script>
+    <script src="scripts/libs/angular/angular-aria/angular-aria.min.js"></script>
+    <!--<script src="scripts/libs/angular/angular-touch.min.js"></script>--> <!--Angular Material already has mobile click, tap, and swipe support-->
+    <script type="text/javascript" src="scripts/libs/angular-material/angular-material.min.js"></script>
+    <script src="scripts/libs/angular-ui-route/ui-router_BUNDLE.min.js"></script>
+    <script src="scripts/libs/ocLazyLoad/ocLazyLoad.min.js"></script>
+    <script src="scripts/libs/loading-bar/loading-bar.min.js"></script>
+    <!--<script src="scripts/libs/perfect-scroll/perfect-scrollbar.min.js"></script>-->
+    <script src="scripts/libs/angular-promise-buttons.min.js"></script>
+    <script type="text/javascript" src="scripts/libs/toaster/toaster.js"></script>
+    <script type="text/javascript" src="scripts/libs/ui-bootstrap-tpls-2.5.0.min.js"></script> <!--v2.1.0/// v2.4.0 has typo with Collapse (overlap in Nav Menu) -->
+    <script src="scripts/libs/pageSlide/angular-pageslide-directive.min.js"></script>
+    <script type="text/javascript" src="scripts/libs/moment-with-locales.min.js"></script> <!--use by DatePicker-->
+
+    <!-- ........SECURITY HASH....................... --> 
+    <script src="scripts/libs/crypto-js/crypto_BUNDLE.min.js"></script>
+    <!-- ........SECURITY HASH....................... --> 
+ 
+    <!--=======================================================================================================-->
+    <script type="text/javascript" src="scripts/app/module.js"></script>
+    <script type="text/javascript" src="scripts/app/constants.js"></script>
+    <!-- ........................................ --> 
+    <script src="scripts/app/security/security_BUNDLE.min.js"></script>
+    <!-- .................................................... -->
+    <script type="text/javascript" src="scripts/app/utilityService.js"></script>
+    <script type="text/javascript" src="scripts/app/dataService.js"></script>
+    <script type="text/javascript" src="scripts/app/routing.js"></script>
+    <script src="home/rootCtrl.js"></script>
+    <script src="home/companyInfoService.js"></script>
+    <!--<script src="common/floatMenu/floatMenu.js"></script>
+    <script src="common/spinKit/spinKit.js"></script>
+    <script src="scripts/app/directives/button-spinner.js"></script>
+    <script src="scripts/app/directives/includeSameScope.js"></script>
+    <script src="scripts/app/filters.js"></script>
+-->
+
+    <script src="scripts/app/directives/directive_common_BUNDLE.min.js"></script>
+    <script async src='receiptDir/receiptCtrl.js'></script>
+    <script async src="scripts/app/directives/directive_receipt_BUNDLE.min.js"></script>
+    <!--<script async src='browser-sync-client.js?v=2.18.13'><\/script>-->
+
+    <!--<script id="__bs_script__">
+    //<![CDATA[
+          document.write("<script async src='http://HOST/node_modules/browser-sync-client/dist/index.js?v=2.18.13'><\/script>".replace("HOST", location.hostname));
+        //document.write("<script async src='http://HOST:3000/browser-sync/browser-sync-client.js?v=2.18.13'><\/script>".replace("HOST", location.hostname));
+    //]]>
+    </script>-->
+    <!--<script src="node_modules/browser-sync/lib/browser-sync.js"></script>
+    <script src="node_modules/bs-html-injector/lib/html-injector.js"></script>
+    <script src="bs-config-selfstart.js"></script>-->
+</body>
+
+</html>

@@ -1,0 +1,112 @@
+﻿<style>
+    #timeline {
+        height: 200px;
+        /*position: absolute;*/
+        top: 60px;
+        left: 0;
+        right: 0;
+        bottom: 0;
+    }
+
+    li.item {
+        list-style: none;
+        width: 150px;
+        color: #1A1A1A;
+        background-color: #D5DDF6;
+        border: 1px solid #97B0F8;
+        border-radius: 2px;
+        margin-bottom: 5px;
+        padding: 5px 12px;
+    }
+
+        li.item:before {
+            content: "≣";
+            font-family: Arial, sans-serif;
+            display: inline-block;
+            font-size: inherit;
+            cursor: move;
+        }
+
+    .list {
+        position: absolute;
+    }
+</style>
+
+<div class="row">
+    <div class="col-md-10">
+        <div class="alert alert-warning">
+            Timeline <b>supports zoom via scroll</b>. Just scroll over!
+            <span> WARNING: remove  <b>dir="rtl"</b> and bootstrap<b>-rtl</b> to make the Timeline bar works well.</span>
+        </div>    
+    </div>
+    <div class="col-md-2">
+        <button class="btn btn-primary" ng-click="showAllGroups()">Restore Hidden</button>
+    </div>
+</div>
+
+
+<div class="row">
+    <div class="col-md-10">
+        <div id="timeline"></div>
+    </div>
+    <div class="col-md-2">
+        <div class="list">
+            <h5>Drage Events!</h5>
+            <ul class="items">
+                <li draggable="true" class="item" ng-repeat="item in items._data" data="{{item}}">
+                    {{item.id}} {{item.start}}
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>
+
+<!--style="display:none"-->
+<textarea id="data">
+    [
+    {
+    "id": 1,
+    "content": "item 1",
+    "start": "2017-01-01T01:00:00",
+    "type":"point",
+    "group": 1
+    },
+    {
+    "id": 2,
+    "content": "item 2",
+    "start": "2017-01-02T02:00:00",
+    "end": "2017-01-02T04:30:00",
+    "type": "box",
+    "group": 2
+    },
+    {
+    "id": 3,
+    "content": "<i class='fa fa-map-marker'></i>",
+    "start": "2017-01-01T03:00:00",
+    "type":"point",
+    "group": 1
+    },
+    {
+    "id": 4,
+    "content": "<div>using 'div' tag makes ALL text visible <i class='fa fa-2x fa-gift'></i></div>",
+    "start": "2017-01-01T04:00:00",
+    "end": "2017-01-01T04:30:00",
+    "type": "box",
+    "group": 2
+    },
+    {
+    "id": 5,
+    "content": "ALL text visible <i class='fa fa-heart-o'></i>",
+    "start": "2017-01-01T05:00:00",
+    "type": "point",
+    "group": 3
+    },
+    {
+    "id": 6,
+    "content": "item 6",
+    "start": "2017-01-01T06:00:00",
+    "type": "point",
+    "group": 1
+    }
+    ]
+</textarea>

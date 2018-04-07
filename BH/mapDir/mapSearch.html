@@ -1,0 +1,151 @@
+﻿<style>
+    @import url('../supplierDir/suppliers.css');
+    #mapid {
+        /*position:absolute;*/
+        margin-top:5px;
+        width:70%;
+        height: 430px;
+        width:100%;
+    }
+    #mapCluster {
+        /*position:absolute;*/
+        /*top:310px;*/
+        width:70%;
+        height: 400px;
+        width:100%;
+    }
+    .legend {
+        line-height: 18px;
+        padding:3px;
+        color: #555;
+        width: 7em;
+        border-radius:3px;
+        opacity: 0.7;
+    }
+    .legend ul {
+        position:relative;
+        margin:3px;
+    }    
+    .legend ul li{
+        height: 18px;
+    }    
+    .legend ul li i {
+        position:absolute;
+        right:0;
+        width: 18px;
+        height: 18px;
+    }
+    .legend ul li span {
+       position:absolute;
+       right: 22px;
+       width: 4em;
+       font-size:.7em;
+    }
+</style>
+
+<div class="row">
+    <div class="col-lg-8 col-md-8">
+        <div class="" ng-show="!selected">
+            <div class="row">
+                <div class="col-sm-12">
+                    <label>Zoom Level: <input type="range" class="ih-range" min="10" max="18" ng-model="zoomLevel" /></label>
+                    <span class="tooltip-inline">{{zoomLevel}}</span>
+                    <button type="button" class="btn" ng-click="reload()">reload</button>
+                    <i class="badge badge-primary">{{featureList.length}}</i>
+                </div>
+            </div>
+            <section class="container-fluid card-group scroll-custom">
+                <div class="row">
+                    <div ng-class="{'col-lg-4 col-md-4 col-sm-12': !feature.expanded, 'height-full': feature.expanded}" class="" ng-repeat="feature in featureList track by feature.layerStamp">
+                        <div ng-class="{'expanded': !!feature.expanded}">
+                            <div class="card" ng-class="{'tile': !feature.expanded}"
+                                 ng-click="flyTo(feature.layerStamp)"
+                                 ng-mouseenter="mapGoToFeature(feature.layerStamp)"
+                                 ng-mouseleave="featureMouseout(feature.layerStamp)">
+                                <i class="fa fa-circle"
+                                   ng-style="{'color':feature.properties.dataSetColor}"
+                                   uib-tooltip="{{::feature.properties.dataSet}}" tooltip-append-to-body="true"></i>
+                                <i class="fa"
+                                   ng-class="{'fa-spoon':feature.properties.category=='Fast Food', 'fa-glass':feature.properties.category=='Resto Cafe'}"></i>
+                                {{feature.properties.name + ' ' + feature.properties.id}}
+                                <i class="fa fa-chevron-left"></i>
+                                <div>
+                                    <i class="fa fa-money"></i> {{::feature.properties.price}}
+                                </div>
+                                <button type="button" class="btn btn-circle" ng-click="setSelectedFeature(feature)"><i class="fa fa-expand"></i></button>
+                                <button type="button" class="btn btn-circle" ng-click="toggleExpandFeature(feature.layerStamp, feature.expanded)"><i class="fa fa-random"></i></button>
+                                <img ng-if="!!feature.expanded" src="../images/itemNoImageGreen.png" />
+                                <img ng-if="!!feature.expanded" src="../images/avatar.png" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>        
+        </div>        
+        <div class="board"
+             ng-show="selected"
+             ng-keydown="keydownFn($event)">
+            <div class="board-body">
+                <button type="button" class="btn btn-circle" ng-click="setSelectedFeature()"><i class="fa fa-compress"></i></button>
+                {{selected.properties.id}}
+                <h2>{{selected.properties.price}}</h2>
+                <h3>
+                    <!--ng-mouseenter="mapGoToFeature(selected.layerStamp)"
+                    ng-mouseleave="featureMouseout(selected.layerStamp)"-->
+                    {{selected.properties.name}}
+                </h3>
+                <img src="../images/marker-icon.png" />
+                <img src="../images/itemNoImageGreen.png" />
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-4 col-md-4">
+        <div class="row">
+            <div class="col-sm-8 col-md-8 col-lg-8">
+                <rzslider rz-slider-model="filter.value"
+                          rz-slider-high="filter.slider.max"
+                          rz-slider-options="filter.slider.options"></rzslider>
+            </div>
+            <span class="tooltip-inline">{{filter.value}}-{{filter.slider.max}}</span>
+            <div class="col-sm-12">
+                <form ng-submit="$event.preventDefault()" name="searchFeatureForm" id="searchFeatureForm"
+                      ng-class="{'has-error':searchFeatureForm.$invalid}">
+                    <md-autocomplete md-floating-label="إبحث عن ما يدهشك!"
+                                     md-search-text-change="querySearch(searchText)"
+                                     md-search-text="searchText"
+                                     md-selected-item="feature"
+                                     md-selected-item-change="mapGoToFeature(feature.layerStamp)"
+                                     md-items="feature in querySearch(searchText)"
+                                     md-item-text="feature.properties.name"
+                                     md-no-cache="noCache"
+                                     md-delay="500"
+                                     md-input-maxlength="30"
+                                     md-input-minlength="2"
+                                     md-input-name="searchFeature"
+                                     md-clear-button="true"
+                                     md-autofocus="true"
+                                     required>
+                        <md-item-template>
+                            <img class="img-circle" src="../images/avatar.png" width="32" height="32" />
+                            <span class="item-title bold" md-highlight-text="searchText" md-highlight-flags="^i">{{feature.properties.name}}</span>&nbsp;
+                            <i class="fa fa-circle"
+                               ng-style="{'color':feature.properties.dataSetColor}"></i>
+                            <span>{{feature.properties.price}}</span> {{feature.layerStamp}}
+                        </md-item-template>
+                        <md-not-found>
+                            لم يتم العثور على "{{searchText}}"
+                            <a ng-click="supplierOpenModal('add','','lg')">أضف مورّد جديد</a>
+                        </md-not-found>
+                        <div ng-messages="searchFeatureForm.searchFeature.$error" ng-if="searchFeatureForm.searchFeature.$touched">
+                            <div ng-message="required">قم بطباعة الإسم الذي  <b>تبحث</b> عنه.</div>
+                            <div ng-message="minlength">Your entry is not long enough.</div>
+                            <div ng-message="maxlength">Your entry is too long.</div>
+                        </div>
+                    </md-autocomplete>
+                </form>
+            </div> 
+        </div>
+       
+        <div id="mapid" ih-map-marker-event></div>
+    </div>
+</div>

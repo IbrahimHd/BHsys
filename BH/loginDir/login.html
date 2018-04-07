@@ -1,0 +1,72 @@
+﻿<link href="loginDir/login.css" rel="stylesheet" />
+<br /><br />
+<!--<p>{{ $ctrl.trans.from()}}</p>
+<p>{{ $ctrl.returnTo.state()}}</p>
+<p>{{ $ctrl.returnTo}}</p>
+<p>{{ $ctrl.trans.redirectedFrom()}}</p>-->
+<!--<h3>returnTo: {{ $ctrl.returnTo.state().name}} {{ $ctrl.trans.from().name }} {{ $ctrl.trans.to().name }} {{$ctrl.test}}</h3>-->
+<div class="container" ng-cloak>
+    <div class="card"></div>
+    <div class="card">
+        <h1 class="title">الدخــول</h1>
+
+        <form name="$ctrl.loginForm" autocomplete="off" novalidate>
+            <div class="input-container">
+                <input type="text" ng-model="$ctrl.credentials.userLogin" required="required" autocomplete="off" readonly onfocus="this.removeAttribute('readOnly');" name="userLogin" id="userLogin"/>
+                <label for="userLogin"><i class="fa fa-user"></i> إسم الدخول</label>
+                <div class="bar"></div>                    
+                <p ng-show="$ctrl.loginForm.userLogin.$dirty && $ctrl.loginForm.userLogin.$error.required" class="help-block">أدخل أسم الدخول.</p>
+            </div>
+            <!-- fake fields are a workaround for chrome autofill getting the wrong fields -->
+            <input style="display:none" type="password" name="fakepasswordremembered"/>
+            <div class="input-container">
+                <input type="password" ng-model="$ctrl.credentials.password" ng-minlength="6" required="required" autocomplete="off" readonly onfocus="this.removeAttribute('readOnly');"  name="password"  id="password"/>
+                <label for="Password"><i class="fa fa-key"></i> كلمة المرور</label>
+                <div class="bar"></div>
+                <p ng-show="$ctrl.loginForm.password.$error.minlength" class="help-block">كلمة المرور يجب أن لا تقل عن 6 أحرف/أرقام/رموز.</p>
+                <p ng-show="$ctrl.loginForm.password.$dirty && $ctrl.loginForm.password.$error.required" class="has-error">أدخل كلمة المرور.</p>
+            </div>
+            <div class="button-container"> <!--spinning-icon="fa fa-circle-o-notch fa-spin"-->
+                <button type="submit" 
+                        ng-click="$ctrl.login($ctrl.credentials)" 
+                        button-spinner="$ctrl.loading" 
+                        ng-disabled="$ctrl.loginForm.$invalid"> 
+                        <span ng-show="!$ctrl.loading">{{$ctrl.loginForm.$invalid? 'إملء معلومات الدخول أولاً':'دخول'}}</span>
+                </button>                             
+            </div>
+        </form>
+    </div>
+    <div class="card alt">
+        <div class="toggle" ng-click="$ctrl.toggle()"></div>
+        <h1 class="title">
+            راسلنا.. تواصل معنا!
+            <span class="close" ng-click="$ctrl.close()"></span>
+        </h1>
+        <form>
+            <div class="input-container">
+                <input type="text" id="userLoginContact" required="required" autocomplete="off" readonly onfocus="this.removeAttribute('readOnly');"/>
+                <label for="userLogin">User Login</label>
+                <div class="bar"></div>
+            </div>
+            <div class="input-container">
+                <input type="password" id="Password" required="required" autocomplete="off" readonly onfocus="this.removeAttribute('readOnly');"/>
+                <label for="Password">Password</label>
+                <div class="bar"></div>
+            </div>
+            <div class="input-container">
+                <input type="password" id="Repeat Password" required="required" autocomplete="off" readonly onfocus="this.removeAttribute('readOnly');"/>
+                <label for="Repeat Password">Repeat Password</label>
+                <div class="bar"></div>
+            </div>
+            <div class="button-container">
+                <button><span>Next</span></button>
+            </div>
+        </form>
+    </div>
+</div>
+
+    <!------------------------------------------>
+<div class="FooterBar container">
+    <img class="HeartBeat" alt="Brand" src="/Images/itemNoImageGreen.png" height="40" width="40" style="margin-top:-15px;margin-left:-32px;"/>
+    <span style="font-family:'Century Gothic';font-size:35px;padding-right:30px;margin-bottom:10px;"><b>BH</b>Sys</span>
+</div>

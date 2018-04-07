@@ -1,0 +1,67 @@
+﻿<div class="side-form" ng-controller="receiptPrintCtrl">
+    <div class="content">
+        <div class="row bg-gray-soft">
+            <div class="col-sm-6">
+                <i class="fa fa-2x fa-shopping-cart"></i>&nbsp;
+                <span class="h3">{{::receipt.supplierName}}</span>
+            </div>
+            <div class="col-sm-5 text-left">
+                <div class="row">
+                    <div class="col-sm-12"><span class="h5">{{::companyInfo.companyHeaderName}}</span></div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-12">
+                        <div class="text-muted small">
+                            <span>{{::companyInfo.companyAddress}}</span>
+                            <span>{{::companyInfo.companyPhone}}{{::companyInfo.companyPhone2 ==null ? '' : (" - " + companyInfo.companyPhone)}}</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-1">
+                <img class="img-rounded" src="../../images/avatar.png" width="32" />
+            </div>
+        </div>
+
+        <div>{{ (receipt.receiptDate | date:"yyyy/MM/dd") || 'empty' }}</div>
+        <table class="table table-hover table-condensed table-responsive">
+            <colgroup><col /></colgroup>
+            <thead>
+                <tr class="text-right">
+                    <th width="25%" class="text-right">الصـــنف</th>
+                    <th width="8%" class="text-right">التوضيب</th>
+                    <th width="7%" class="text-right">فارغ</th>
+                    <th width="8%" class="text-right">رهن</th>
+                    <th width="8%" class="text-right">عتالة</th>
+                    <th width="7%" class="text-right">نقل</th>
+                    <th width="10%" class="text-right">الكــمية</th>
+                    <th width="12%" class="text-right">الـسعر</th>
+                    <th width="15%" class="text-right">الإجـمالي</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr class="animate"
+                    ng-repeat="receiptItem in receipt.ReceiptItems">
+                    <td>{{::receiptItem.itemName}}</td>
+                    <td>{{::receiptItem.itemPackage}}</td>
+                    <td>{{::receiptItem.itemPackageCount}}</td>
+                    <td>{{::receiptItem.itemPackageDeposit | number}}</td>
+                    <td>{{::receiptItem.itemLandingCost | number}}</td>
+                    <td>{{::receiptItem.itemFreight | number}}</td>
+                    <td class="bold">{{::receiptItem.itemQnty}}</td>
+                    <td class="bold">{{::receiptItem.itemCost | number}}</td>
+                    <td class="bg-success">{{::receiptItem.total}}</td>
+                </tr>
+            </tbody>
+            <tfoot>
+                <tr>
+                    <th rowspan="2">الإجمالي</th>
+                    <td colspan="7">{{(receipt.total || 0) | nbrToWords}}</td>
+                    <th ng-class="{'text-muted small':false}">{{receipt.total || 'المبالغ غير مكتملة بعد'}}</th>
+                </tr>
+            </tfoot>
+        </table>
+        <button class="btn btn-primary btn-outline" ng-click="goBackState()">إغلاق</button>
+    </div>
+    <div class="background"></div>
+</div>
