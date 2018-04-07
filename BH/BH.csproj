@@ -275,6 +275,7 @@
     <Content Include="scripts\libs\angular-ui-route\ui-router-core.min.js.map" />
     <Content Include="home\data.json" />
     <Content Include="scripts\libs\angular-ui-route\ui-router-angularjs.min.js.map" />
+    <Content Include="readme.md" />
     <None Include="scripts\libs\leaflet\leaflet.draw.min.css 0.4.12" />
     <Content Include="scripts\libs\leaflet\images\spritesheet-2x.png" />
     <Content Include="scripts\libs\leaflet\images\spritesheet.png" />
