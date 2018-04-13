@@ -1,4 +1,5 @@
 ﻿/// <reference path="../scripts/libs/angular/angular.js"/>
+/// <reference path="../scripts/app/security/authService.js" />
 /// <reference path="../scripts/app/dataService.js"/>
 
 (function () {
@@ -7,11 +8,10 @@
         .module("app")
         .controller("rootCtrl", rootCtrl);
     
-        rootCtrl.$inject = ['$scope', '$rootScope', '$document', '$timeout', 'dataService', 'companyInfoService', '$state', '$window', '$ocLazyLoad', 'authService', 'USER_ROLES', 'toaster', 'debugMode'];
+        rootCtrl.$inject = ['$scope', '$rootScope', '$document', '$timeout', 'dataService', 'companyInfoService', '$state', '$window', '$ocLazyLoad', 'authService', 'toaster', 'debugMode'];
     
-        function rootCtrl($scope, $rootScope,$document, $timeout, dataService, companyInfoService, $state, $window, $ocLazyLoad, authService, USER_ROLES, toaster, debugMode) {
+        function rootCtrl($scope, $rootScope,$document, $timeout, dataService, companyInfoService, $state, $window, $ocLazyLoad, authService, toaster, debugMode) {
             var debugThis = false;
-
             $rootScope.nowMoment = $scope.nowMoment = moment();
             $rootScope.now = $scope.now = moment().format('DD MMMM YYYY HH:mm:ss');
             $rootScope.milliseconds = $rootScope.nowMoment.format('HHmmss');
@@ -20,10 +20,6 @@
             //$scope.isCollapsed = true;
             $scope.isNavCollapsed = true;
             $scope.currentUser = $rootScope.currentUser;
-
-            $scope.userRoles = USER_ROLES;
-            /* expose auth fn to views*/
-            $scope.isAuthorized = $rootScope.isAuthorized = authService.isAuthorized;
 
             // if a session exists for current user (page was refreshed) log him in again
             // BUT NOT in the FIRST normal login
@@ -143,8 +139,8 @@
             /*
              * The initial data will be grabed through the loginCtrl
              * It's needed here as well grab the data again in case of reload as the loginCtlr will not be evaluated
-            */
-             $scope.isAuthorized() && companyInfoService.grab(); //< checking the sessionStorage handled at the service level
+             >>$rootScope-level defined "isUserAuthenticated" is not accessible here at root initialization
+            /* isUserAuthorized && */authService.isAuthenticated() && companyInfoService.grab(); //< checking the sessionStorage handled at the service level
 
             //.........pageSlide...........
             /* BROKEN WHEN CLOSING BY CLICK-OUTSIDE, ALTERNATIVELY, USE [isBottomMenuOpen=!isBottomMenuOpen] RATHER THAN toggle()*/

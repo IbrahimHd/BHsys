@@ -60,10 +60,10 @@
 	          authorizedRoles = [authorizedRoles];  
 		    }
 
-		    var data = $window.sessionStorage.userInfo ? JSON.parse($window.sessionStorage.userInfo) : null;
+		    var sessionUserInfo = $window.sessionStorage.userInfo ? JSON.parse($window.sessionStorage.userInfo) : null;
 
 	        return (authService.isAuthenticated() &&
-	          authorizedRoles.indexOf(data.UserRole) !== -1);
+	          authorizedRoles.indexOf(sessionUserInfo.UserRole) !== -1);
 	    };
 	    
 	    function sessionHandler() {

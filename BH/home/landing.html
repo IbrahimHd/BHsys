@@ -14,7 +14,10 @@
         <div include-same-scope="home/viz.html"></div>
     </div>
     <h3>Landing Page</h3>
-    {{authorizedRoles}}
-    <p ng-if="isAuthorized(authorizedRoles)">show this only to {{authorizedRoles}}</p>
-    {{isAuthorized(currentUser.UserLogin)}}
+    <p>Authorized Roles: <span ng-bind="authorizedRoles"></span></p>
+    <p>Is current user Authorized: <span ng-bind="isUserAuthorized"></span></p>
+    <p ng-if="isUserAuthorized">show this only to {{authorizedRoles}}</p>
+    <br />
+    <br />
+    <br />
 </div>

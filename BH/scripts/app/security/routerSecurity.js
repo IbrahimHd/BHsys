@@ -13,7 +13,7 @@
         });
     }])
     .run(['$transitions', '$rootScope', '$location', 'authService', 'authNotifyService', 'toaster', 'debugMode', function ($transitions, $rootScope, $location, authService, authNotifyService, toaster, debugMode) {
-        var debugThis = true;
+        var debugThis = false;
         function stopOrRedirect(trans) {
             /*check whether the transition has to be canceled or diverted to some where (original-source url/state)*/
             if (trans.from().name === '')
@@ -23,16 +23,22 @@
         }
 
         $transitions.onStart({/* to:'protected.**' */ }, function (trans) {
+            debugMode && debugThis && console.info('Route-ui OnStart initiated...');
+            debugMode && debugThis && console.log('from trans:',trans.from(),'To trans:', trans.to());
             /*
             trans.params() reads the params from the state definition (which is not always the case, e.g. viz)
             alternatively, $location.search() is used instead.
             */
+            $rootScope.isUserAuthenticated = false;
+            $rootScope.isUserAuthorized = false;
             $rootScope.redirectPath = $location.path();
             $rootScope.redirectSearchQuery = $location.search();
             let nextState = trans.to();
             let nextParams = trans.params();
+            var authorizedRoles = nextState.access.authorizedRoles;
+            $rootScope.authorizedRoles = authorizedRoles; //<< it is initialized after the rootCtrl
             //var auth = trans.injector().get('authService');
-            console.log(nextState.name, 'authService.isAuthenticated() ', authService.isAuthenticated());
+            debugMode && debugThis && console.log(nextState.name, 'authService.isAuthenticated() ', authService.isAuthenticated());
             if (nextState.name === 'login' && authService.isAuthenticated()) {
                 debugMode && debugThis && console.log('ALREADY LOGGED IN!');
                 toaster.pop({
@@ -49,10 +55,10 @@
                 console.warn("WARNING: authorization is not set on this state: ", nextState.name);
             } else {
                 if (authService.isAuthenticated()) {
-                   var authorizedRoles = nextState.access.authorizedRoles;
-                   $rootScope.authorizedRoles = authorizedRoles;
-                   console.log('authService.isAuthorized(authorizedRoles)', authService.isAuthorized(authorizedRoles));
-                   if (authService.isAuthorized(authorizedRoles)) {
+                    $rootScope.isUserAuthenticated = true;
+                    debugMode && debugThis && console.log( $rootScope.authorizedRoles, 'authService.isAuthorized(authorizedRoles)', authService.isAuthorized(authorizedRoles));
+                    if (authService.isAuthorized(authorizedRoles)) {
+                        $rootScope.isUserAuthorized = true;
                        console.warn("OK =============> Authorized");
                    }
                    else {
