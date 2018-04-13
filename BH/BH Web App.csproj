@@ -197,7 +197,7 @@
     <Content Include="scripts\app\security\routerSecurity.js" />
     <Content Include="scripts\app\security\securityManager.js" />
     <Content Include="scripts\app\service-worker-register.js" />
-    <Content Include="scripts\app\service-worker.js" />
+    <Content Include="service-worker.js" />
     <Content Include="scripts\app\utilityService.js" />
     <Content Include="scripts\app\webcam.service.js" />
     <Content Include="scripts\libs\angular-ui-route\ui-router-angularjs.min.js" />

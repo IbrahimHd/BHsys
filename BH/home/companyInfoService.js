@@ -29,7 +29,7 @@
                 debugMode && debugThis && console.log('COMPANY INFO ALREADY EXIST')
                 $rootScope.companyInfo = JSON.parse($window.sessionStorage.getItem('companyInfo'));
             } else {
-                debugMode && debugThis && console.log('NO COMPANY INFO')
+                debugMode && debugThis && console.log('NO COMPANY INFO, trying to grab it from the server...')
                 loadCompanyInfo();
             }
         }
