@@ -1,5 +1,5 @@
-﻿const VERSION = 'v2';
-const preCacheName = 'version2',
+﻿const VERSION = 'v3';
+const preCacheName = 'version3',
     preCacheFiles = [
         '/',
         '/receipts',
@@ -8,9 +8,10 @@ const preCacheName = 'version2',
         //'home/landing.html',
         './scripts/app/service-worker-register.js'
     ];
-function log(message) {
+function log(message, description) {
     //const debugThis = false;
-    /*debugThis && */console.log(VERSION, message);
+    /*debugThis && */(description !== null) && console.log(VERSION, message, description);
+                     (description === null) && console.log(VERSION, message);
 }
 
 self.addEventListener('install', (e) => {
@@ -26,7 +27,7 @@ self.addEventListener('fetch', (e) => {
     e.respondWith(
         caches.match(e.request).then(response => {
             if (!response) {
-                console.log('[ServiceWorker] No response from fetch',e.request.url);
+                log('[ServiceWorker] No response from fetch',e.request.url);
                 return fetch(e.request);
             }
 

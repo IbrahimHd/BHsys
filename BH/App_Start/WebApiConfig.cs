@@ -12,6 +12,12 @@ namespace BH
         {
             // Web API configuration and services
 
+            // New code
+            // >> globally: var corsAllowed = new EnableCorsAttribute("http://localhost:4200", "*", "*");
+            // config.EnableCors(corsAllowed);
+            // or >> annotation: [EnableCors(origins: "http://localhost:4200", headers: "*", methods: "*")]
+            config.EnableCors();
+
             // Web API routes
             config.MapHttpAttributeRoutes();
 

@@ -2,11 +2,13 @@
 using BH.Classes;
 using System;
 using System.Net;
+using System.Web.Http.Cors;
 
 namespace BH.Api
 {
     public class IpController : ApiController
     {
+        [EnableCors(origins: "http://localhost:4200", headers: "*", methods: "*")]
         [HttpGet]
         public IHttpActionResult GetIp()
         {
